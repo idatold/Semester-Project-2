@@ -1,13 +1,98 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="icon" sizes="16x16" href="/favicon-16x16.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BidHive</title>
-  </head>
-  <body>
-  
     <script type="module" src="/src/main.js"></script>
+  </head>
+  <body class="bg-gray-100 font-heading">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
+      <div class="px-4 sm:px-6 lg:px-8 flex justify-between items-center h-32">
+       
+        <!-- Left Section: Logo -->
+        <div class="flex items-center">
+
+        </div>
+
+        <!-- Middle Section: Search Bar -->
+        <div class="flex-1 flex justify-center">
+          <input
+            type="text"
+            placeholder="Search..."
+            class="px-4 py-2 border rounded-lg focus:outline-none focus:ring"
+          />
+        </div>
+
+        <!-- Right Section: User Info -->
+        <div class="flex items-center space-x-4">
+          <!-- Credits -->
+          <div class="flex items-center space-x-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="34"
+              height="34"
+              viewBox="0 0 34 34"
+              fill="none"
+            >
+              <path
+                d="M0 26.9145V29.75C0 32.0941 5.71094 34 12.75 34C19.7891 34 25.5 32.0941 25.5 29.75V26.9145C22.7574 28.8469 17.7437 29.75 12.75 29.75C7.75625 29.75 2.74258 28.8469 0 26.9145ZM21.25 8.5C28.2891 8.5 34 6.59414 34 4.25C34 1.90586 28.2891 0 21.25 0C14.2109 0 8.5 1.90586 8.5 4.25C8.5 6.59414 14.2109 8.5 21.25 8.5ZM0 19.9484V23.375C0 25.7191 5.71094 27.625 12.75 27.625C19.7891 27.625 25.5 25.7191 25.5 23.375V19.9484C22.7574 22.2062 17.7371 23.375 12.75 23.375C7.76289 23.375 2.74258 22.2062 0 19.9484ZM27.625 20.6789C31.4301 19.9418 34 18.5738 34 17V14.1645C32.4594 15.2535 30.1949 15.9973 27.625 16.4555V20.6789ZM12.75 10.625C5.71094 10.625 0 13.0023 0 15.9375C0 18.8727 5.71094 21.25 12.75 21.25C19.7891 21.25 25.5 18.8727 25.5 15.9375C25.5 13.0023 19.7891 10.625 12.75 10.625ZM27.3129 14.3637C31.2973 13.6465 34 12.2387 34 10.625V7.78945C31.6426 9.45625 27.5918 10.3527 23.3285 10.5652C25.2875 11.5148 26.7285 12.7898 27.3129 14.3637Z"
+                fill="#956B1B"
+              />
+            </svg>
+            <span class="text-yellow-700 font-semibold">1000</span>
+          </div>
+
+          <!-- User Profile -->
+          <a href="#" class="p-2 px-10">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="34"
+              height="34"
+              viewBox="0 0 34 34"
+              fill="none"
+            >
+              <path
+                d="M17.1905 19.4195C17.1588 19.4195 17.1114 19.4195 17.0798 19.4195C17.0323 19.4195 16.9691 19.4195 16.9216 19.4195C13.3318 19.3088 10.6434 16.5098 10.6434 13.0623C10.6434 9.5516 13.5058 6.68927 17.0165 6.68927C20.5272 6.68927 23.3895 9.5516 23.3895 13.0623C23.3737 16.5256 20.6695 19.3088 17.2379 19.4195C17.2063 19.4195 17.2063 19.4195 17.1905 19.4195ZM17.0007 9.04555C14.7867 9.04555 12.9997 10.8483 12.9997 13.0465C12.9997 15.213 14.6919 16.9684 16.8426 17.0474C16.89 17.0316 17.0481 17.0316 17.2063 17.0474C19.3253 16.9367 20.9858 15.1972 21.0016 13.0465C21.0016 10.8483 19.2146 9.04555 17.0007 9.04555Z"
+                fill="#956B1B"
+              />
+              <path
+                d="M17.0014 34.0001C12.7474 34.0001 8.68323 32.4188 5.53626 29.5406C5.25161 29.2876 5.12509 28.9081 5.15672 28.5443C5.3623 26.6625 6.53254 24.9071 8.47765 23.6104C13.1902 20.4792 20.8283 20.4792 25.5251 23.6104C27.4702 24.9229 28.6404 26.6625 28.846 28.5443C28.8935 28.9239 28.7511 29.2876 28.4665 29.5406C25.3195 32.4188 21.2553 34.0001 17.0014 34.0001ZM7.63951 28.2281C10.2646 30.4262 13.5697 31.6281 17.0014 31.6281C20.433 31.6281 23.7381 30.4262 26.3632 28.2281C26.0786 27.2634 25.3195 26.3304 24.1967 25.5713C20.3065 22.9778 13.7121 22.9778 9.79021 25.5713C8.66742 26.3304 7.92416 27.2634 7.63951 28.2281Z"
+                fill="#956B1B"
+              />
+              <path
+                d="M17 34C7.62233 34 0 26.3777 0 17C0 7.62233 7.62233 0 17 0C26.3777 0 34 7.62233 34 17C34 26.3777 26.3777 34 17 34ZM17 2.37209C8.93488 2.37209 2.37209 8.93488 2.37209 17C2.37209 25.0651 8.93488 31.6279 17 31.6279C25.0651 31.6279 31.6279 25.0651 31.6279 17C31.6279 8.93488 25.0651 2.37209 17 2.37209Z"
+                fill="#956B1B"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Category Navigation -->
+      <div class="border-t border-yellow-700 bg-white">
+        <div class="px-4">
+          <div
+            class="flex justify-center space-x-6 py-4 text-yellow-700 font-semibold text-2xl"
+          >
+            <a href="#" class="hover:underline">Art</a>
+            <a href="#" class="hover:underline">Books</a>
+            <a href="#" class="hover:underline">Vintage</a>
+            <a href="#" class="hover:underline">Interiors</a>
+            <a href="#" class="hover:underline">Decor</a>
+            <a href="#" class="hover:underline">Jewelry</a>
+            <a href="#" class="hover:underline">Collectibles</a>
+            <a href="#" class="hover:underline">Games</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content (Just for Testing) -->
+    <div class="mt-32 text-center">
+      <p class="text-gray-700">Content starts here...</p>
+    </div>
   </body>
 </html>
