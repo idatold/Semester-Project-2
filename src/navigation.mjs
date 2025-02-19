@@ -25,3 +25,4 @@ export function setupHamburgerMenu({
     mobileMenu.classList.add('hidden');
   });
 }
+

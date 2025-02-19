@@ -8,5 +8,10 @@ setupHamburgerMenu({
 });
 
 
+import { initProfileModal } from './profileModal.mjs';
+
+document.addEventListener('DOMContentLoaded', () => {
+  initProfileModal();
+});
 
 
