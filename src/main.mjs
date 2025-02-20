@@ -1,5 +1,5 @@
 import './style.css'
-import { setupHamburgerMenu } from '../src/navigation.mjs';
+import { setupHamburgerMenu } from './navigation.mjs';
 
 setupHamburgerMenu({
   menuBtnSelector: '#menu-btn',
