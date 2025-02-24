@@ -1,4 +1,4 @@
-import './style.css'
+import './css/style.css'
 import { setupHamburgerMenu } from './navigation.mjs';
 
 setupHamburgerMenu({
