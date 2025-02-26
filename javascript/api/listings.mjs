@@ -1,16 +1,16 @@
 // listings.mjs
-import api from '../api/axios.mjs'; 
+import api from '../api/axios.mjs';
 
 /**
  * Get ALL listings
  */
 export async function getAllListings() {
   try {
-    // If your endpoint is /auction/listings
+    // The endpoint is /auction/listings
     const response = await api.get('/auction/listings');
     // The API returns an object like { data: [...], meta: {...} }
-    // We only need the array from "data"
-    return response.data.data; // <-- Changed from response.data to response.data.data
+    // We'll return the array of listings from response.data.data
+    return response.data.data;
   } catch (error) {
     console.error('Failed to fetch listings:', error);
     throw error;
@@ -19,10 +19,11 @@ export async function getAllListings() {
 
 /**
  * Get ONE listing by ID
- * @param {string} id 
- * @param {Object} options 
+ * @param {string} id - The listing's ID
+ * @param {Object} options
  * @param {boolean} options.seller - Include seller info
  * @param {boolean} options.bids - Include bids
+ * @returns {Object} The single listing object from response.data.data
  */
 export async function getSingleListing(id, { seller, bids } = {}) {
   try {
@@ -36,10 +37,9 @@ export async function getSingleListing(id, { seller, bids } = {}) {
     }
 
     const response = await api.get(endpoint);
-    // For single listing, the shape is also { data: { ... }, meta: {...} }
-    // If you want just the listing object, you could do `return response.data.data;`
-    // But if your code is expecting an object with { data, meta }, you can keep it as is:
-    return response.data;
+    // The API typically returns { data: {...}, meta: {...} }
+    // We'll return the listing object from response.data.data
+    return response.data.data;
   } catch (error) {
     console.error(`Failed to fetch listing ${id}:`, error);
     throw error;
@@ -48,15 +48,19 @@ export async function getSingleListing(id, { seller, bids } = {}) {
 
 /**
  * Place a bid on a listing
+ * @param {string} listingId - The listing's ID
+ * @param {number} amount - The bid amount
+ * @returns {Object} The updated listing object from response.data.data
  */
 export async function bidOnListing(listingId, amount) {
   try {
+    // POST /auction/listings/:id/bids with { amount }
     const response = await api.post(`/auction/listings/${listingId}/bids`, { amount });
-    return response.data; // The updated listing object
+    // The API typically returns { data: {...}, meta: {...} }
+    // We'll return the updated listing object from response.data.data
+    return response.data.data;
   } catch (error) {
     console.error(`Failed to bid on listing ${listingId}:`, error);
     throw error;
   }
 }
-
-  
