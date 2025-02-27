@@ -1,23 +1,14 @@
 // accessToken.mjs
 
-/**
- * Store the access token in localStorage under "accessToken"
- */
 export function storeAccessToken(accessToken) {
-    localStorage.setItem('accessToken', accessToken);
-  }
-  
-  /**
-   * Retrieve the access token from localStorage
-   */
-  export function getAccessToken() {
-    return localStorage.getItem('accessToken');
-  }
-  
-  /**
-   * Clear the stored token (useful for logout)
-   */
-  export function clearAccessToken() {
-    localStorage.removeItem('accessToken');
-  }
-  
+  // Store it under a known key, e.g. "token"
+  localStorage.setItem('token', accessToken);
+}
+
+export function getAccessToken() {
+  return localStorage.getItem('token');
+}
+
+export function clearAccessToken() {
+  localStorage.removeItem('token');
+}

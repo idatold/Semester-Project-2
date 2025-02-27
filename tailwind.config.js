@@ -1,5 +1,5 @@
 module.exports = {
-	content: ["./**/*.{html,js,ts}", "!./node_modules/**/*"],
+	content: ["./**/*.{html,js,ts,mjs}", "!./node_modules/**/*"],
 	theme: {
 		screens: {
 			sm: '640px',

@@ -33,8 +33,8 @@ async function loadListing() {
     container.innerHTML = '';
 
     // Build the DOM-based layout
-    const singleListingEl = createSingleListingDOM(listing);
-    container.appendChild(singleListingEl);
+    const layoutEl = createSingleListingLayout(listing);
+    container.appendChild(layoutEl);
 
   } catch (error) {
     console.error('Failed to load single listing:', error);
@@ -43,7 +43,37 @@ async function loadListing() {
 }
 
 /**
- * Create DOM elements for the single listing
+ * Create an overall layout with:
+ * 1) A back link row (left-aligned)
+ * 2) A card that is wider than 500px to accommodate a 500×333 image
+ */
+function createSingleListingLayout(listing) {
+  // 1) Outer container for the back link + card
+  const outerContainer = document.createElement('div');
+  outerContainer.className = 'w-full flex flex-col items-center';
+
+  // 2) Back link row
+  const backLinkRow = document.createElement('div');
+  backLinkRow.className = 'w-full max-w-4xl px-4 mb-4';
+  backLinkRow.style.textAlign = 'left';
+
+  const backLink = document.createElement('a');
+  backLink.href = '/auctions/index.html';
+  backLink.className = 'text-lg underline text-gray-600';
+  backLink.textContent = '← Back to all auctions';
+
+  backLinkRow.appendChild(backLink);
+  outerContainer.appendChild(backLinkRow);
+
+  // 3) The actual listing card
+  const cardEl = createSingleListingDOM(listing);
+  outerContainer.appendChild(cardEl);
+
+  return outerContainer;
+}
+
+/**
+ * Create DOM elements for the single listing card
  */
 function createSingleListingDOM(listing) {
   const {
@@ -57,29 +87,22 @@ function createSingleListingDOM(listing) {
     tags,
   } = listing;
 
-  // 1) Outer container (like a "card")
   const card = document.createElement('div');
   card.className = 'bg-white shadow-md rounded p-6 flex flex-col items-center';
-  // We want most text in Beiruti except the title
+  card.style.width = '520px';
+  card.style.margin = '0 auto';
   card.style.fontFamily = 'Beiruti'; 
 
-  // 2) Back link
-  const backLink = document.createElement('a');
-  backLink.href = '/auctions/index.html';
-  backLink.className = 'text-m underline text-gray-600 inline-block self-start mb-4';
-  backLink.textContent = '← Back to all auctions';
-  card.appendChild(backLink);
-
-  // 3) Image container (600×400)
+  // 1) Image container (500×333)
   const imageContainer = document.createElement('div');
-  imageContainer.style.width = '600px';
-  imageContainer.style.height = '400px';
+  imageContainer.style.width = '500px';
+  imageContainer.style.height = '333px';
   imageContainer.style.display = 'flex';
   imageContainer.style.justifyContent = 'center';
   imageContainer.style.alignItems = 'center';
   imageContainer.className = 'mb-4';
 
-  const imageUrl = media?.[0]?.url || 'https://via.placeholder.com/600x400';
+  const imageUrl = media?.[0]?.url || 'https://via.placeholder.com/500x333';
   const imageEl = document.createElement('img');
   imageEl.src = imageUrl;
   imageEl.alt = title || 'Untitled';
@@ -94,77 +117,102 @@ function createSingleListingDOM(listing) {
   imageContainer.appendChild(imageEl);
   card.appendChild(imageContainer);
 
-  // 4) Title
+  // 2) Title
   const titleEl = document.createElement('h2');
   titleEl.textContent = title || 'Untitled';
-  titleEl.className = 'text-2xl font-bold mb-1';
-  // Different font for the title (if you have a heading font)
-  titleEl.style.fontFamily = 'The seasons, sans-serif'; 
+  titleEl.className = 'text-2xl font-bold mb-6';
+  titleEl.style.fontFamily = 'The seasons, sans-serif';
   card.appendChild(titleEl);
 
-  // 5) Seller name
+  // 3) Seller + Avatar + Tags container (centered)
+  const sellerTagsContainer = document.createElement('div');
+  sellerTagsContainer.className = 'flex flex-col items-center mb-6 w-full';
+
+  // 3a) Hex-shaped avatar
+  const avatarUrl = seller?.avatar?.url || 'https://via.placeholder.com/50';
+  const avatarEl = document.createElement('img');
+  avatarEl.src = avatarUrl;
+  avatarEl.alt = 'Seller avatar';
+  avatarEl.style.width = '50px';
+  avatarEl.style.height = '50px';
+  avatarEl.style.objectFit = 'cover';
+  // A regular hex with top/bottom points
+  avatarEl.style.clipPath = 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)';
+  avatarEl.style.marginBottom = '8px';
+
+  sellerTagsContainer.appendChild(avatarEl);
+
+  // 3b) Seller name (centered)
   const sellerName = seller?.name || 'Unknown Seller';
   const sellerEl = document.createElement('p');
-  sellerEl.className = 'text-xl text-gray-600 mb-2';
+  sellerEl.className = 'text-xl text-gray-600 mb-1';
+  sellerEl.style.textAlign = 'center';
   sellerEl.textContent = `by ${sellerName}`;
-  card.appendChild(sellerEl);
+  sellerTagsContainer.appendChild(sellerEl);
 
-  // 6) Tags in #9B7E47
+  // 3c) Tags in #9B7E47 (centered)
   const tagsText = (Array.isArray(tags) && tags.length > 0) ? tags.join(', ') : 'No tags';
   const tagsEl = document.createElement('p');
   tagsEl.style.color = '#9B7E47';
-  tagsEl.className = 'mb-6';
+  tagsEl.style.textAlign = 'center';
   tagsEl.textContent = tagsText;
-  card.appendChild(tagsEl);
+  sellerTagsContainer.appendChild(tagsEl);
 
-  // 7) Description
+  card.appendChild(sellerTagsContainer);
+
+  // 4) Description (left-aligned, text-xl)
   const descEl = document.createElement('p');
-  descEl.className = 'text-gray-700 text-xl mb-4';
+  descEl.className = 'text-gray-700 text-xl mt-8 w-full';
+  descEl.style.textAlign = 'left';
   descEl.textContent = description || 'No description provided.';
   card.appendChild(descEl);
 
-  // 8) Info row for Created/Ends
+  // 5) Info row for Created/Ends
   const infoRow = document.createElement('div');
-  infoRow.className = 'flex justify-between w-full text-lg text-gray-500 mb-4';
+  infoRow.className = 'flex justify-between w-full text-xl text-gray-500 mb-4';
 
   const createdLocal = formatDateWithBreak(created);
   const endsLocal = formatDateWithBreak(endsAt);
 
   const createdSpan = document.createElement('span');
   createdSpan.innerHTML = `Created:<br>${createdLocal}`;
+  createdSpan.style.textAlign = 'left';
+  createdSpan.className = 'mb-16 mt-16';
 
   const endsSpan = document.createElement('span');
   endsSpan.innerHTML = `Ends:<br>${endsLocal}`;
+  endsSpan.style.textAlign = 'left';
+  endsSpan.className = 'mb-16 mt-16';
 
   infoRow.appendChild(createdSpan);
   infoRow.appendChild(endsSpan);
   card.appendChild(infoRow);
 
-  // 9) Bidding area
+  // 6) Bidding area
   const token = localStorage.getItem('token');
   if (token) {
     // Show the place bid input + button
     const bidContainer = document.createElement('div');
-    bidContainer.className = 'flex flex-col items-center w-full mb-4';
-
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'flex items-center';
+    bidContainer.className = 'flex flex-col w-full mb-4';
+    bidContainer.style.fontSize = '1.25rem'; // text-xl
+    bidContainer.style.fontWeight = 'normal';
+    bidContainer.style.textAlign = 'center';
 
     const inputEl = document.createElement('input');
     inputEl.type = 'number';
     inputEl.id = 'bid-amount';
-    inputEl.className = 'border border-yellow-700 rounded-l px-3 py-2 focus:outline-none';
+    inputEl.className = 'border border-yellow-700 rounded-t px-3 py-2 focus:outline-none';
     inputEl.placeholder = 'Your bid';
     inputEl.min = '1';
+    inputEl.style.marginBottom = '6px';
 
     const btnEl = document.createElement('button');
     btnEl.id = 'place-bid-btn';
     btnEl.textContent = 'Place Bid';
-    btnEl.className = 'bg-[#9B7E47] hover:bg-[#866C3C] text-white px-4 py-2 rounded-r transition relative z-10';
+    btnEl.className = 'bg-[#9B7E47] hover:bg-[#866C3C] mb-32 text-white px-4 py-2 rounded-b transition relative z-10';
 
-    rowDiv.appendChild(inputEl);
-    rowDiv.appendChild(btnEl);
-    bidContainer.appendChild(rowDiv);
+    bidContainer.appendChild(inputEl);
+    bidContainer.appendChild(btnEl);
     card.appendChild(bidContainer);
 
     // The event for placing a bid is in handleBid
@@ -173,52 +221,69 @@ function createSingleListingDOM(listing) {
   } else {
     // Show a note if not logged in
     const note = document.createElement('p');
-    note.className = 'text-m text-gray-500';
+    note.className = 'text-xl text-gray-500 w-full';
+    note.style.textAlign = 'center';
     note.textContent = 'Log in to place a bid.';
     card.appendChild(note);
   }
 
-  // 10) Bid History
+  // 7) Bid History
   const bidHistoryDiv = document.createElement('div');
   bidHistoryDiv.className = 'border-t pt-4 w-full';
 
   const bidTitle = document.createElement('h3');
-  bidTitle.className = 'text-lg font-bold mb-2';
+  bidTitle.className = 'text-xl font-bold mb-2';
+  bidTitle.style.textAlign = 'left';
   bidTitle.textContent = 'Bid History';
 
   bidHistoryDiv.appendChild(bidTitle);
 
   const ulEl = document.createElement('ul');
+  ulEl.style.textAlign = 'left';
 
+  // -- START OF CHANGE: sort bids descending by amount
   if (bids && bids.length > 0) {
-    bids.forEach(bid => {
+    // Sort the array so highest bid is first
+    const sortedBids = [...bids].sort((a, b) => b.amount - a.amount);
+
+    sortedBids.forEach(bid => {
+      // Each row is text-xl
       const liEl = document.createElement('li');
-      liEl.className = 'flex justify-between items-center text-sm py-2 border-b last:border-0';
+      liEl.className = 'flex w-full text-xl py-2 border-b last:border-0';
+      liEl.style.fontWeight = 'normal';
 
-      const amountSpan = document.createElement('span');
-      amountSpan.className = 'font-bold text-xl text-gray-800';
-      amountSpan.textContent = bid.amount;
-
+      // Bidder on the left
       const bidderSpan = document.createElement('span');
-      bidderSpan.className = 'text-gray-600';
+      bidderSpan.style.width = '33%';
+      bidderSpan.style.textAlign = 'left';
       bidderSpan.textContent = bid.bidder?.name || 'Unknown';
 
+      // Amount in the center
+      const amountSpan = document.createElement('span');
+      amountSpan.style.width = '33%';
+      amountSpan.style.textAlign = 'center';
+      amountSpan.textContent = bid.amount;
+
+      // Date on the right
       const dateSpan = document.createElement('span');
-      dateSpan.className = 'text-gray-500';
+      dateSpan.style.width = '33%';
+      dateSpan.style.textAlign = 'right';
       dateSpan.textContent = formatDateNoBreak(bid.created);
 
-      liEl.appendChild(amountSpan);
       liEl.appendChild(bidderSpan);
+      liEl.appendChild(amountSpan);
       liEl.appendChild(dateSpan);
 
       ulEl.appendChild(liEl);
     });
   } else {
     const noBidsLi = document.createElement('li');
-    noBidsLi.className = 'text-sm text-gray-500';
+    noBidsLi.className = 'text-xl text-gray-500';
+    noBidsLi.style.textAlign = 'left';
     noBidsLi.textContent = 'No bids yet.';
     ulEl.appendChild(noBidsLi);
   }
+  // -- END OF CHANGE
 
   bidHistoryDiv.appendChild(ulEl);
   card.appendChild(bidHistoryDiv);
@@ -279,8 +344,8 @@ async function handleBid() {
 
       // Rebuild the DOM with the updated listing
       container.innerHTML = '';
-      const newCard = createSingleListingDOM(updatedListing);
-      container.appendChild(newCard);
+      const newLayout = createSingleListingLayout(updatedListing);
+      container.appendChild(newLayout);
 
     } else {
       alert('Bid placed, but no updated data returned.');

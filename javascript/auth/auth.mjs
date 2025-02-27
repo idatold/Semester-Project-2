@@ -1,4 +1,3 @@
-// auth.mjs
 import api from '../api/axios.mjs';
 import { storeAccessToken } from './accessToken.mjs';
 
@@ -19,32 +18,40 @@ export async function registerUser(username, email, password) {
   }
 }
 
-
+/**
+ * Login User
+ */
 export async function loginUser(email, password) {
   try {
-    // 1) Make the POST request to /auth/login
+    // 1) POST /auth/login
     const response = await api.post('/auth/login', { email, password });
 
-    // 2) Log the response so you can see the exact structure
-    console.log('Login response data:', response.data.data);
-    // Example: { accessToken: 'abc123', user: {...} } or { token: 'abc123', ... }
+    // 2) Log the entire response so you see what the server returns
+    console.log('Login full response:', response.data);
 
-    // 3) If your Auction API returns { accessToken: "abc123" }, destructure that:
-    const { accessToken, token } = response.data.data;
+    // The Auction API might return something like:
+    // { data: { accessToken: "...", name: "User", ... }, meta: {} }
+    // Or maybe { data: { token: "..." }, ... }
 
-    // If "accessToken" is there, store it. Otherwise, if "token" is there, store that.
-    // Adjust this to match your actual API property name.
+    // 3) Destructure from response.data.data if that's the shape
+    const maybeData = response.data.data || {}; // fallback to empty obj
+    console.log('Login response data (inner):', maybeData);
+
+    // 4) Attempt to grab either "accessToken" or "token"
+    const { accessToken, token } = maybeData;
+
+    // 5) If we find one of them, store it
     if (accessToken) {
       storeAccessToken(accessToken);
-      console.log('Access token stored:', accessToken);
+      console.log('Access token stored from "accessToken":', accessToken);
     } else if (token) {
       storeAccessToken(token);
-      console.log('Access token stored (from "token"):', token);
+      console.log('Access token stored from "token":', token);
     } else {
-      console.warn('No token found in the login response. Check the API structure.');
+      console.warn('No token found in login response. Check the API structure.');
     }
 
-    // 4) Return the entire response data if you want the caller to see it
+    // 6) Return the entire response if needed
     return response.data;
   } catch (error) {
     console.error('Login error:', error);
