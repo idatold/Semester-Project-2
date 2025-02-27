@@ -59,12 +59,9 @@ export function initProfileModal() {
         const data = await registerUser(username, email, password);
         console.log('Registration successful:', data);
 
-        // If the API doesn't throw, we can assume success. 
+        // If the API doesn't throw, we can assume success.
         // Show a success message to the user:
         alert('Registration successful! Please log in.');
-
-        // Optionally, store token or user data if returned:
-        // localStorage.setItem('token', data.accessToken);
 
         // Switch back to the login slide
         slider.style.transform = 'translateX(0%)';
@@ -76,36 +73,31 @@ export function initProfileModal() {
   }
 
   // 6. Handle LOGIN form submission
-const loginForm = document.getElementById('login-form');
-if (loginForm) {
-  loginForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+  const loginForm = document.getElementById('login-form');
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
 
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value;
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
 
-    try {
-      // Attempt to log in
-      const data = await loginUser(email, password);
-      console.log('Login response:', data);
+      try {
+        // Attempt to log in
+        const data = await loginUser(email, password);
+        console.log('Login response:', data);
 
-      // If the API returns a token, store it
-      if (data.accessToken) {
-        localStorage.setItem('token', data.accessToken);
+        // If loginUser() already stores the token internally, we don't need to do it here.
+        // But if you want to store userEmail or other data, you can:
+        localStorage.setItem('userEmail', email);
+
+        alert('Login successful!');
+
+        // Then redirect to the profile page (or refresh, or close modal, etc.)
+        window.location.href = './profile/index.html';
+      } catch (error) {
+        console.error('Login error:', error);
+        alert('Login failed. Please check your credentials.');
       }
-
-      // Optionally store the user’s email
-      localStorage.setItem('userEmail', email);
-
-      // Show a success message
-      alert('Login successful!');
-
-      // Then redirect to the profile page
-      window.location.href = './profile/index.html';
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('Login failed. Please check your credentials.');
-    }
-  });
-}
+    });
+  }
 }

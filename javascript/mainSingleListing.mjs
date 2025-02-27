@@ -1,13 +1,16 @@
-import './main.mjs'; // Shared nav toggles, etc.
+import './main.mjs'; // shared nav toggles, etc.
 import { getSingleListing, bidOnListing } from '../javascript/api/listings.mjs';
+import { formatDateWithBreak, formatDateNoBreak } from './api/dateFormatter.mjs';
 
-// 1) Grab container + parse the listing ID
+// The container in your listing HTML
 const container = document.getElementById('listing-container');
+
+// Parse the listing ID from ?id=...
 const params = new URLSearchParams(window.location.search);
 const listingId = params.get('id');
 
 /**
- * Load the single listing
+ * Load and display the single listing
  */
 async function loadListing() {
   if (!listingId) {
@@ -18,12 +21,21 @@ async function loadListing() {
   try {
     container.innerHTML = '<p>Loading listing...</p>';
 
-    // If API returns { data: {...}, meta: {...} }, you may do:
-    const listingResponse = await getSingleListing(listingId, { seller: true, bids: true });
-    // Adjust if needed
-    const listing = listingResponse.data; 
+    const listing = await getSingleListing(listingId, { seller: true, bids: true });
+    console.log('Single listing object:', listing);
 
-    renderListing(listing);
+    if (!listing) {
+      container.innerHTML = '<p>No listing found or an error occurred.</p>';
+      return;
+    }
+
+    // Clear out "Loading..." text
+    container.innerHTML = '';
+
+    // Build the DOM-based layout
+    const layoutEl = createSingleListingLayout(listing);
+    container.appendChild(layoutEl);
+
   } catch (error) {
     console.error('Failed to load single listing:', error);
     container.innerHTML = '<p>Could not load listing.</p>';
@@ -31,9 +43,39 @@ async function loadListing() {
 }
 
 /**
- * Render the listing details (no "1000 credits" placeholder)
+ * Create an overall layout with:
+ * 1) A back link row (left-aligned)
+ * 2) A card that is wider than 500px to accommodate a 500×333 image
  */
-function renderListing(listing) {
+function createSingleListingLayout(listing) {
+  // 1) Outer container for the back link + card
+  const outerContainer = document.createElement('div');
+  outerContainer.className = 'w-full flex flex-col items-center';
+
+  // 2) Back link row
+  const backLinkRow = document.createElement('div');
+  backLinkRow.className = 'w-full max-w-4xl px-4 mb-4';
+  backLinkRow.style.textAlign = 'left';
+
+  const backLink = document.createElement('a');
+  backLink.href = '/auctions/index.html';
+  backLink.className = 'text-lg underline text-gray-600';
+  backLink.textContent = '← Back to all auctions';
+
+  backLinkRow.appendChild(backLink);
+  outerContainer.appendChild(backLinkRow);
+
+  // 3) The actual listing card
+  const cardEl = createSingleListingDOM(listing);
+  outerContainer.appendChild(cardEl);
+
+  return outerContainer;
+}
+
+/**
+ * Create DOM elements for the single listing card
+ */
+function createSingleListingDOM(listing) {
   const {
     title,
     description,
@@ -41,108 +83,247 @@ function renderListing(listing) {
     created,
     endsAt,
     bids,
+    seller,
+    tags,
   } = listing;
 
-  // Check if user is logged in
+  const card = document.createElement('div');
+  card.className = 'bg-white shadow-md rounded p-6 flex flex-col items-center';
+  card.style.width = '520px';
+  card.style.margin = '0 auto';
+  card.style.fontFamily = 'Beiruti'; 
+
+  // 1) Image container (500×333)
+  const imageContainer = document.createElement('div');
+  imageContainer.style.width = '500px';
+  imageContainer.style.height = '333px';
+  imageContainer.style.display = 'flex';
+  imageContainer.style.justifyContent = 'center';
+  imageContainer.style.alignItems = 'center';
+  imageContainer.className = 'mb-4';
+
+  const imageUrl = media?.[0]?.url || 'https://via.placeholder.com/500x333';
+  const imageEl = document.createElement('img');
+  imageEl.src = imageUrl;
+  imageEl.alt = title || 'Untitled';
+  imageEl.style.width = '100%';
+  imageEl.style.height = '100%';
+  imageEl.style.objectFit = 'cover';
+  imageEl.className = 'rounded cursor-pointer';
+
+  // On click => enlarge modal
+  imageEl.addEventListener('click', () => openImageModal(imageUrl));
+
+  imageContainer.appendChild(imageEl);
+  card.appendChild(imageContainer);
+
+  // 2) Title
+  const titleEl = document.createElement('h2');
+  titleEl.textContent = title || 'Untitled';
+  titleEl.className = 'text-2xl font-bold mb-6';
+  titleEl.style.fontFamily = 'The seasons, sans-serif';
+  card.appendChild(titleEl);
+
+  // 3) Seller + Avatar + Tags container (centered)
+  const sellerTagsContainer = document.createElement('div');
+  sellerTagsContainer.className = 'flex flex-col items-center mb-6 w-full';
+
+  // 3a) Hex-shaped avatar
+  const avatarUrl = seller?.avatar?.url || 'https://via.placeholder.com/50';
+  const avatarEl = document.createElement('img');
+  avatarEl.src = avatarUrl;
+  avatarEl.alt = 'Seller avatar';
+  avatarEl.style.width = '50px';
+  avatarEl.style.height = '50px';
+  avatarEl.style.objectFit = 'cover';
+  // A regular hex with top/bottom points
+  avatarEl.style.clipPath = 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)';
+  avatarEl.style.marginBottom = '8px';
+
+  sellerTagsContainer.appendChild(avatarEl);
+
+  // 3b) Seller name (centered)
+  const sellerName = seller?.name || 'Unknown Seller';
+  const sellerEl = document.createElement('p');
+  sellerEl.className = 'text-xl text-gray-600 mb-1';
+  sellerEl.style.textAlign = 'center';
+  sellerEl.textContent = `by ${sellerName}`;
+  sellerTagsContainer.appendChild(sellerEl);
+
+  // 3c) Tags in #9B7E47 (centered)
+  const tagsText = (Array.isArray(tags) && tags.length > 0) ? tags.join(', ') : 'No tags';
+  const tagsEl = document.createElement('p');
+  tagsEl.style.color = '#9B7E47';
+  tagsEl.style.textAlign = 'center';
+  tagsEl.textContent = tagsText;
+  sellerTagsContainer.appendChild(tagsEl);
+
+  card.appendChild(sellerTagsContainer);
+
+  // 4) Description (left-aligned, text-xl)
+  const descEl = document.createElement('p');
+  descEl.className = 'text-gray-700 text-xl mt-8 w-full';
+  descEl.style.textAlign = 'left';
+  descEl.textContent = description || 'No description provided.';
+  card.appendChild(descEl);
+
+  // 5) Info row for Created/Ends
+  const infoRow = document.createElement('div');
+  infoRow.className = 'flex justify-between w-full text-xl text-gray-500 mb-4';
+
+  const createdLocal = formatDateWithBreak(created);
+  const endsLocal = formatDateWithBreak(endsAt);
+
+  const createdSpan = document.createElement('span');
+  createdSpan.innerHTML = `Created:<br>${createdLocal}`;
+  createdSpan.style.textAlign = 'left';
+  createdSpan.className = 'mb-16 mt-16';
+
+  const endsSpan = document.createElement('span');
+  endsSpan.innerHTML = `Ends:<br>${endsLocal}`;
+  endsSpan.style.textAlign = 'left';
+  endsSpan.className = 'mb-16 mt-16';
+
+  infoRow.appendChild(createdSpan);
+  infoRow.appendChild(endsSpan);
+  card.appendChild(infoRow);
+
+  // 6) Bidding area
   const token = localStorage.getItem('token');
-
-  // If logged in, show bid input & button; otherwise show a note
-  let placeBidHTML = '';
   if (token) {
-    placeBidHTML = `
-      <div class="flex items-center">
-        <input
-          type="number"
-          id="bid-amount"
-          class="border border-gray-300 rounded-l px-3 py-2 focus:outline-none"
-          placeholder="Your bid"
-          min="1"
-        />
-        <button
-          id="place-bid-btn"
-          class="bg-[#9B7E47] hover:bg-[#866C3C] text-white px-4 py-2 rounded-r transition"
-        >
-          Place Bid
-        </button>
-      </div>
-    `;
+    // Show the place bid input + button
+    const bidContainer = document.createElement('div');
+    bidContainer.className = 'flex flex-col w-full mb-4';
+    bidContainer.style.fontSize = '1.25rem'; // text-xl
+    bidContainer.style.fontWeight = 'normal';
+    bidContainer.style.textAlign = 'center';
+
+    const inputEl = document.createElement('input');
+    inputEl.type = 'number';
+    inputEl.id = 'bid-amount';
+    inputEl.className = 'border border-yellow-700 rounded-t px-3 py-2 focus:outline-none';
+    inputEl.placeholder = 'Your bid';
+    inputEl.min = '1';
+    inputEl.style.marginBottom = '6px';
+
+    const btnEl = document.createElement('button');
+    btnEl.id = 'place-bid-btn';
+    btnEl.textContent = 'Place Bid';
+    btnEl.className = 'bg-[#9B7E47] hover:bg-[#866C3C] mb-32 text-white px-4 py-2 rounded-b transition relative z-10';
+
+    bidContainer.appendChild(inputEl);
+    bidContainer.appendChild(btnEl);
+    card.appendChild(bidContainer);
+
+    // The event for placing a bid is in handleBid
+    btnEl.addEventListener('click', handleBid);
+
   } else {
-    placeBidHTML = `<p class="text-sm text-gray-500">Log in to place a bid.</p>`;
+    // Show a note if not logged in
+    const note = document.createElement('p');
+    note.className = 'text-xl text-gray-500 w-full';
+    note.style.textAlign = 'center';
+    note.textContent = 'Log in to place a bid.';
+    card.appendChild(note);
   }
 
-  // The first media image or fallback
-  const imageUrl = media?.[0]?.url || 'https://via.placeholder.com/400x300';
+  // 7) Bid History
+  const bidHistoryDiv = document.createElement('div');
+  bidHistoryDiv.className = 'border-t pt-4 w-full';
 
-  container.innerHTML = `
-    <!-- "Back to all auctions" link -->
-    <a
-      href="/auctions/index.html"
-      class="text-sm underline text-gray-600 inline-block mb-4"
-    >
-      &larr; Back to all auctions
-    </a>
+  const bidTitle = document.createElement('h3');
+  bidTitle.className = 'text-xl font-bold mb-2';
+  bidTitle.style.textAlign = 'left';
+  bidTitle.textContent = 'Bid History';
 
-    <!-- Main Card -->
-    <div class="max-w-xl mx-auto bg-white shadow-md rounded p-6 flex flex-col items-center">
+  bidHistoryDiv.appendChild(bidTitle);
 
-      <!-- Listing Image -->
-      <img
-        src="${imageUrl}"
-        alt="${title}"
-        class="w-full h-auto object-cover rounded mb-4"
-      />
+  const ulEl = document.createElement('ul');
+  ulEl.style.textAlign = 'left';
 
-      <!-- Title & placeholder category -->
-      <h2 class="text-2xl font-bold mb-1">${title || 'Untitled'}</h2>
-      <p class="text-gray-500 mb-4">Vintage</p>
+  // -- START OF CHANGE: sort bids descending by amount
+  if (bids && bids.length > 0) {
+    // Sort the array so highest bid is first
+    const sortedBids = [...bids].sort((a, b) => b.amount - a.amount);
 
-      <!-- Description -->
-      <p class="text-gray-700 mb-4 text-center">
-        ${description || 'No description provided.'}
-      </p>
+    sortedBids.forEach(bid => {
+      // Each row is text-xl
+      const liEl = document.createElement('li');
+      liEl.className = 'flex w-full text-xl py-2 border-b last:border-0';
+      liEl.style.fontWeight = 'normal';
 
-      <!-- Listing info row -->
-      <div class="flex justify-between w-full text-sm text-gray-500 mb-4">
-        <span>Created: ${created || 'Unknown'}</span>
-        <span>Ends: ${endsAt ? new Date(endsAt).toLocaleDateString() : '???'}</span>
-      </div>
+      // Bidder on the left
+      const bidderSpan = document.createElement('span');
+      bidderSpan.style.width = '33%';
+      bidderSpan.style.textAlign = 'left';
+      bidderSpan.textContent = bid.bidder?.name || 'Unknown';
 
-      <!-- "Place Bid" area (no 1000 placeholder) -->
-      <div class="flex flex-col items-center w-full mb-4">
-        ${placeBidHTML}
-      </div>
+      // Amount in the center
+      const amountSpan = document.createElement('span');
+      amountSpan.style.width = '33%';
+      amountSpan.style.textAlign = 'center';
+      amountSpan.textContent = bid.amount;
 
-      <!-- Bid History -->
-      <div class="border-t pt-4 w-full">
-        <h3 class="text-xl font-bold mb-2">Bid History</h3>
-        <ul>
-          ${
-            bids && bids.length
-              ? bids.map((bid) => `
-                <li class="flex justify-between text-sm py-2 border-b last:border-0">
-                  <span>${bid.amount}</span>
-                  <span>${bid.bidder?.name || 'Unknown'}</span>
-                  <span>${new Date(bid.created).toLocaleDateString()}</span>
-                </li>
-              `).join('')
-              : '<li class="text-sm text-gray-500">No bids yet.</li>'
-          }
-        </ul>
-      </div>
-    </div>
-  `;
+      // Date on the right
+      const dateSpan = document.createElement('span');
+      dateSpan.style.width = '33%';
+      dateSpan.style.textAlign = 'right';
+      dateSpan.textContent = formatDateNoBreak(bid.created);
 
-  // If logged in, attach an event to the "Place Bid" button
-  if (token) {
-    const placeBidBtn = document.getElementById('place-bid-btn');
-    if (placeBidBtn) {
-      placeBidBtn.addEventListener('click', handleBid);
-    }
+      liEl.appendChild(bidderSpan);
+      liEl.appendChild(amountSpan);
+      liEl.appendChild(dateSpan);
+
+      ulEl.appendChild(liEl);
+    });
+  } else {
+    const noBidsLi = document.createElement('li');
+    noBidsLi.className = 'text-xl text-gray-500';
+    noBidsLi.style.textAlign = 'left';
+    noBidsLi.textContent = 'No bids yet.';
+    ulEl.appendChild(noBidsLi);
   }
+  // -- END OF CHANGE
+
+  bidHistoryDiv.appendChild(ulEl);
+  card.appendChild(bidHistoryDiv);
+
+  // Return the final card
+  return card;
 }
 
 /**
- * Handle the bid button click
+ * A simple modal for enlarging the image
+ */
+function openImageModal(imageUrl) {
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+
+  // Big image
+  const bigImage = document.createElement('img');
+  bigImage.src = imageUrl;
+  bigImage.className = 'rounded shadow-lg cursor-pointer';
+  bigImage.style.maxWidth = '80vw';
+  bigImage.style.maxHeight = '80vh';
+  bigImage.style.objectFit = 'contain';
+
+  overlay.appendChild(bigImage);
+  document.body.appendChild(overlay);
+
+  // Close modal on overlay click
+  overlay.addEventListener('click', () => {
+    document.body.removeChild(overlay);
+  });
+
+  // Stop click on bigImage from closing
+  bigImage.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+}
+
+/**
+ * The handleBid function (re-used in createSingleListingDOM)
  */
 async function handleBid() {
   try {
@@ -155,17 +336,18 @@ async function handleBid() {
     }
 
     console.log('Placing bid on listing:', listingId, 'with amount:', amount);
-
-    // Attempt to place the bid
     const updatedListing = await bidOnListing(listingId, amount);
     console.log('Bid response:', updatedListing);
 
-    // If the API returns updated listing data, re-render
-    if (updatedListing && updatedListing.data) {
+    if (updatedListing) {
       alert('Bid placed successfully!');
-      renderListing(updatedListing.data);
+
+      // Rebuild the DOM with the updated listing
+      container.innerHTML = '';
+      const newLayout = createSingleListingLayout(updatedListing);
+      container.appendChild(newLayout);
+
     } else {
-      // If the API doesn't return updated data, you might just refresh or show a note
       alert('Bid placed, but no updated data returned.');
     }
 
@@ -175,5 +357,5 @@ async function handleBid() {
   }
 }
 
-// Finally, load the listing
+// Finally, call loadListing
 loadListing();
