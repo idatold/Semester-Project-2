@@ -1,5 +1,6 @@
 import './main.mjs';  
-import { getAllListings } from './api/listings.mjs'; // Adjust path if needed
+import { getActiveListings } from './api/listings.mjs'; // NEW: fetch active auctions
+// Everything else remains the same
 
 const listingsContainer = document.getElementById('listings-container');
 
@@ -39,6 +40,7 @@ function getTimeRemaining(endsAt) {
 
 /**
  * Render a single listing card
+ * (Exactly the same as your snippet)
  */
 function renderListing(listing) {
   const { id, title, description, media, endsAt } = listing;
@@ -50,11 +52,9 @@ function renderListing(listing) {
   card.style.height = '440px';
 
   // 2) Image container (224px tall)
-  // Use the same horizontal padding as the text area so they align
   const imageContainer = document.createElement('div');
   imageContainer.style.width = '100%';
   imageContainer.style.height = '224px';
-  // We'll do top/bottom = 0, left/right = 16px so the text lines up
   imageContainer.style.padding = '0 16px';
   imageContainer.style.display = 'flex';
   imageContainer.style.justifyContent = 'center';
@@ -72,31 +72,27 @@ function renderListing(listing) {
   card.appendChild(imageContainer);
 
   // 3) Text area (216px tall => 440 - 224)
-
   const textArea = document.createElement('div');
   textArea.className = 'flex flex-col justify-between';
   textArea.style.width = '100%';
   textArea.style.height = '216px';
-  textArea.style.padding = '0 16px 16px 16px'; // no top padding, 16px bottom, 16px L/R
+  textArea.style.padding = '0 16px 16px 16px';
 
   // Title/description wrapper
   const textWrapper = document.createElement('div');
 
-  // Title (add more margin under it)
   const h2 = document.createElement('h2');
-  h2.className = 'text-l font-bold mb-4'; // <— "mb-4" for more space
+  h2.className = 'text-l font-bold mb-4';
   h2.textContent = truncateText(title || 'Untitled', 30);
 
-  // Description
   const descP = document.createElement('p');
   descP.className = 'text-gray-600 mb-1';
   descP.textContent = truncateText(description || 'No description provided.', 60);
   descP.style.fontFamily = 'Beiruti';
 
-  // Example placeholders for bid/time
   const bidP = document.createElement('p');
   bidP.className = 'font-semibold text-m';
-  bidP.textContent = 'Current Bid: 2300'; // or dynamic
+  bidP.textContent = 'Current Bid: 2300';
   bidP.style.fontFamily = 'Beiruti';
 
   const timeP = document.createElement('p');
@@ -105,22 +101,18 @@ function renderListing(listing) {
   timeP.textContent = `Time remaining: ${remaining}`;
   timeP.style.fontFamily = 'Beiruti';
 
-  // Append them
   textWrapper.appendChild(h2);
   textWrapper.appendChild(descP);
   textWrapper.appendChild(bidP);
   textWrapper.appendChild(timeP);
 
-  // Center the "View Listing" button while text is left-aligned
+  // Center the "View Listing" button
   const buttonWrapper = document.createElement('div');
   buttonWrapper.style.width = '100%';
   buttonWrapper.style.textAlign = 'center';
 
   const viewBtn = document.createElement('button');
   viewBtn.textContent = 'View Listing';
-  viewBtn.setAttribute('data-id', id);
-
-  // Use a neutral base class for spacing and rounded corners
   viewBtn.className = 'mt-2 text-white px-4 py-2 rounded transition';
   viewBtn.style.backgroundColor = '#9B7E47';
 
@@ -130,35 +122,83 @@ function renderListing(listing) {
   viewBtn.addEventListener('mouseout', () => {
     viewBtn.style.backgroundColor = '#9B7E47';
   });
-
   viewBtn.addEventListener('click', () => {
     window.location.href = `/auctions/listing/index.html?id=${id}`;
   });
 
   buttonWrapper.appendChild(viewBtn);
 
-  // Put text + button wrapper into textArea
   textArea.appendChild(textWrapper);
   textArea.appendChild(buttonWrapper);
-
   card.appendChild(textArea);
+
   listingsContainer.appendChild(card);
 }
 
+// --------------- INFINITE SCROLL + ACTIVE FETCH ---------------
+
+// Track page, loading state, and whether more pages exist
+let currentPage = 1;
+let isLoading = false;
+let hasMore = true;
+
 /**
- * Fetch and display all listings
+ * Load a specific page of active auctions
+ */
+async function loadListings(page) {
+  isLoading = true;
+  try {
+    // We'll call our new getActiveListings(page) function
+    // which returns { data: [...], meta: {...} }
+    const response = await getActiveListings(page);
+    const { data, meta } = response;
+
+    // If it's page 1 and container still says "Loading auctions...", clear it
+    if (page === 1 && listingsContainer.innerHTML === 'Loading auctions...') {
+      listingsContainer.innerHTML = '';
+    }
+
+    // Render each listing with your existing "renderListing"
+    data.forEach(renderListing);
+
+    // If meta indicates last page, set hasMore = false
+    if (meta.isLastPage) {
+      hasMore = false;
+    }
+  } catch (error) {
+    console.error(`Failed to load listings for page ${page}:`, error);
+  } finally {
+    isLoading = false;
+  }
+}
+
+/**
+ * Setup infinite scroll
+ */
+function initInfiniteScroll() {
+  window.addEventListener('scroll', async () => {
+    // If near bottom and not loading, load next page
+    if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 200)) {
+      if (!isLoading && hasMore) {
+        currentPage++;
+        await loadListings(currentPage);
+      }
+    }
+  });
+}
+
+/**
+ * Initialize listings on page load
  */
 async function initListings() {
   listingsContainer.innerHTML = 'Loading auctions...';
 
-  try {
-    const listings = await getAllListings();
-    listingsContainer.innerHTML = '';
-    listings.forEach(renderListing);
-  } catch (error) {
-    listingsContainer.innerHTML = '<p>Failed to load listings.</p>';
-    console.error(error);
-  }
+  // 1) Load page 1
+  await loadListings(currentPage);
+
+  // 2) Set up infinite scroll
+  initInfiniteScroll();
 }
 
+// Finally, call initListings
 initListings();

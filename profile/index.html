@@ -4,14 +4,10 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="icon" sizes="16x16" href="/favicon-16x16.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Your customizable profile."
-    />
+    <meta name="description" content="Your customizable profile." />
     <title>Profile</title>
-
-    <!-- Main JS entry (where we import the hamburger toggler, etc.) -->
-    <script type="module" src="../javascript/main.mjs"></script>
+    
+    <script type="module" src="../javascript/mainProfile.mjs"></script>
   </head>
 
   <body class="bg-gray-100 font-heading">
@@ -86,7 +82,9 @@
       </div>
 
       <!-- MOBILE NAV BAR (<900px) -->
-      <div class="md2:hidden w-full px-6 py-4 flex flex-col items-center">
+      <div
+        class="md2:hidden w-full px-6 py-4 flex flex-col items-center"
+      >
         <!-- 1) Logo on top (centered) -->
         <img
           src="/assets/BidHiveLogo.svg"
@@ -234,193 +232,236 @@
         <a href="#" class="hover:underline">Collectibles</a>
         <a href="#" class="hover:underline">Games</a>
       </div>
-    </nav>
-    <!-- END NAVBAR -->
 
-    <!-- MODAL -->
-    <div
-      id="profile-modal"
-      class="fixed inset-0 z-[999] hidden bg-black/50 flex items-center justify-center"
-      aria-hidden="true"
-    >
-      <!-- Backdrop (to close modal on click) -->
-      <div id="backdrop" class="absolute inset-0"></div>
-
-      <!-- The "Slider Container" (same size for both states) -->
+      <!-- MODAL -->
       <div
-        class="relative w-[90%] max-w-5xl h-auto bg-white shadow-lg rounded-lg overflow-hidden"
+        id="profile-modal"
+        class="fixed inset-0 z-[999] hidden bg-black/50 flex items-center justify-center"
+        aria-hidden="true"
       >
-        <!-- Close button -->
-        <button
-          id="close-modal"
-          class="absolute top-4 right-4 text-gray-600 hover:text-black focus:outline-none"
-          aria-label="Close Modal"
-        >
-          ✕
-        </button>
+        <!-- Backdrop (to close modal on click) -->
+        <div id="backdrop" class="absolute inset-0"></div>
 
-        <!-- The SLIDER: 200% width for 2 slides side by side -->
+        <!-- The "Slider Container" (same size for both states) -->
         <div
-          id="slider"
-          class="flex w-[200%] transition-transform duration-300 ease-in-out"
-          style="transform: translateX(0%)"
+          class="relative w-[90%] max-w-5xl h-auto bg-white shadow-lg rounded-lg overflow-hidden"
         >
-          <!-- SLIDE 1: LOGIN (brand on right, login form on left) -->
-          <div class="w-1/2 flex">
-            <!-- Left side: Login Form -->
-            <div class="w-1/2 flex flex-col justify-center p-8">
-              <h2 class="text-3xl font-bold mb-6">Login</h2>
-              <form id="login-form">
-                <div class="mb-4">
-                  <label class="block mb-1 font-medium" for="login-email"
-                    >Email</label
-                  >
-                  <input
-                    type="email"
-                    id="login-email"
-                    name="email"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-                  />
-                </div>
-                <div class="mb-4">
-                  <label class="block mb-1 font-medium" for="login-password"
-                    >Password</label
-                  >
-                  <input
-                    type="password"
-                    id="login-password"
-                    name="password"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  class="bg-[#956B1B] text-white px-4 py-2 rounded hover:bg-[#7a5616] transition-colors"
-                >
-                  Login
-                </button>
-              </form>
+          <!-- Close button -->
+          <button
+            id="close-modal"
+            class="absolute top-4 right-4 text-gray-600 hover:text-black focus:outline-none"
+            aria-label="Close Modal"
+          >
+            ✕
+          </button>
 
-              <p class="mt-4">
-                Don’t have an account?
-                <button
-                  id="show-register"
-                  class="text-[#956B1B] underline cursor-pointer"
-                >
-                  Register
-                </button>
-              </p>
-            </div>
+          <!-- The SLIDER: 200% width for 2 slides side by side -->
+          <div
+            id="slider"
+            class="flex w-[200%] transition-transform duration-300 ease-in-out"
+            style="transform: translateX(0%)"
+          >
+            <!-- SLIDE 1: LOGIN (brand on right, login form on left) -->
+            <div class="w-1/2 flex">
+              <!-- Left side: Login Form -->
+              <div class="w-1/2 flex flex-col justify-center p-8">
+                <h2 class="text-3xl font-bold mb-6">Login</h2>
+                <form id="login-form">
+                  <div class="mb-4">
+                    <label class="block mb-1 font-medium" for="login-email">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="login-email"
+                      name="email"
+                      class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label class="block mb-1 font-medium" for="login-password">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      id="login-password"
+                      name="password"
+                      class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    class="bg-[#956B1B] text-white px-4 py-2 rounded hover:bg-[#7a5616] transition-colors"
+                  >
+                    Login
+                  </button>
+                </form>
 
-            <!-- Right side: Brand -->
-            <div
-              class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center"
-            >
-              <div class="text-center p-6">
-                <img
-                  src="/assets/BidHivewhitelogo.png"
-                  alt="BidHive Logo"
-                  class="mx-auto mb-4"
-                />
-                <!-- Optional decorative text/graphics here -->
+                <p class="mt-4">
+                  Don’t have an account?
+                  <button
+                    id="show-register"
+                    class="text-[#956B1B] underline cursor-pointer"
+                  >
+                    Register
+                  </button>
+                </p>
+              </div>
+
+              <!-- Right side: Brand -->
+              <div
+                class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center"
+              >
+                <div class="text-center p-6">
+                  <img
+                    src="/assets/BidHivewhitelogo.png"
+                    alt="BidHive Logo"
+                    class="mx-auto mb-4"
+                  />
+                  <!-- Optional decorative text/graphics here -->
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- SLIDE 2: REGISTER (brand on left, register form on right) -->
-          <div class="w-1/2 flex">
-            <!-- Left side: Brand -->
-            <div
-              class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center"
-            >
-              <div class="text-center p-6">
-                <img
-                  src="/assets/BidHivewhitelogo.png"
-                  alt="BidHive Logo"
-                  class="mx-auto mb-4"
-                />
+            <!-- SLIDE 2: REGISTER (brand on left, register form on right) -->
+            <div class="w-1/2 flex">
+              <!-- Left side: Brand -->
+              <div
+                class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center"
+              >
+                <div class="text-center p-6">
+                  <img
+                    src="/assets/BidHivewhitelogo.png"
+                    alt="BidHive Logo"
+                    class="mx-auto mb-4"
+                  />
+                </div>
               </div>
-            </div>
 
-            <!-- Right side: Register Form -->
-            <div class="w-1/2 flex flex-col justify-center p-8">
-              <h2 class="text-3xl font-bold mb-6">Register</h2>
-              <!-- REGISTER FORM -->
-              <form id="register-form">
-                <div class="mb-4">
-                  <label class="block mb-1 font-medium" for="register-username"
-                    >Username</label
+              <!-- Right side: Register Form -->
+              <div class="w-1/2 flex flex-col justify-center p-8">
+                <h2 class="text-3xl font-bold mb-6">Register</h2>
+                <!-- REGISTER FORM -->
+                <form id="register-form">
+                  <div class="mb-4">
+                    <label
+                      class="block mb-1 font-medium"
+                      for="register-username"
+                    >
+                      Username
+                    </label>
+                    <input
+                      type="text"
+                      id="register-username"
+                      name="username"
+                      class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label class="block mb-1 font-medium" for="register-email">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="register-email"
+                      name="email"
+                      class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block mb-1 font-medium"
+                      for="register-password"
+                    >
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      id="register-password"
+                      name="password"
+                      class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    class="bg-[#956B1B] text-white px-4 py-2 rounded hover:bg-[#7a5616] transition-colors"
                   >
-                  <input
-                    type="text"
-                    id="register-username"
-                    name="username"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-                  />
-                </div>
-                <div class="mb-4">
-                  <label class="block mb-1 font-medium" for="register-email"
-                    >Email</label
-                  >
-                  <input
-                    type="email"
-                    id="register-email"
-                    name="email"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-                  />
-                </div>
-                <div class="mb-4">
-                  <label class="block mb-1 font-medium" for="register-password"
-                    >Password</label
-                  >
-                  <input
-                    type="password"
-                    id="register-password"
-                    name="password"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  class="bg-[#956B1B] text-white px-4 py-2 rounded hover:bg-[#7a5616] transition-colors"
-                >
-                  Register
-                </button>
-              </form>
+                    Register
+                  </button>
+                </form>
 
-              <p class="mt-4">
-                Already have an account?
-                <button
-                  id="show-login"
-                  class="text-[#956B1B] underline cursor-pointer"
-                >
-                  Login
-                </button>
-              </p>
+                <p class="mt-4">
+                  Already have an account?
+                  <button
+                    id="show-login"
+                    class="text-[#956B1B] underline cursor-pointer"
+                  >
+                    Login
+                  </button>
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </nav>
+
+    <!-- Wrapper to add top spacing and manage layout -->
+    
+      <main class="flex-grow mt-32">
+        <div class="pt-44 min-h-screen flex flex-col">
+        <!-- Navbar or Profile Section -->
+        <div class="navbar flex items-center space-x-4">
+          <!-- Profile Info -->
+          <div class="flex items-center space-x-2">
+            <!-- Avatar -->
+            <img
+              class="profile-avatar rounded-full"
+              src="default-avatar.png"
+              alt="Profile Avatar"
+              width="40"
+              height="40"
+            />
+            <!-- Name, Credits, and Bio -->
+            <div>
+              <div class="profile-name font-bold">John Doe</div>
+              <div class="profile-credits text-yellow-700">1000</div>
+              <div class="profile-bio text-sm">This is a short bio...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Optional: Banner Section -->
+        <div>
+          <img
+            class="profile-banner"
+            src="default-banner.png"
+            alt="Profile Banner"
+          />
+        </div>
+
+        <!-- Additional main content can go here -->
+      </main>
+
+      <footer class="bg-[#d1b38c] text-white text-center py-8">
+        <div class="flex flex-col items-center">
+          <!-- Logo/Honeycomb Image -->
+          <img
+            src="/assets/BidHivewhiteloginregister.svg"
+            alt="BidHive honeycomb logo"
+            class="mb-4 w-32 h-32"
+          />
+
+          <!-- Navigation Links -->
+          <nav class="flex space-x-8 mb-6">
+            <a href="#" class="hover:underline">All Listings</a>
+            <a href="#" class="hover:underline">Become a member</a>
+            <a href="#" class="hover:underline">Privacy Policy</a>
+          </nav>
+          <!-- Copyright -->
+          <p class="text-sm">&copy; BidHive all rights reserved 2025</p>
+        </div>
+      </footer>
     </div>
-
-    <footer class="bg-[#d1b38c] text-white text-center py-8">
-      <div class="flex flex-col items-center">
-        <!-- Logo/Honeycomb Image -->
-        <img
-          src="/assets/BidHivewhiteloginregister.svg"
-          alt="BidHive honeycomb logo"
-          class="mb-4 w-32 h-32"
-        />
-
-        <!-- Navigation Links -->
-        <nav class="flex space-x-8 mb-6">
-          <a href="#" class="hover:underline">All Listings</a>
-          <a href="#" class="hover:underline">Become a member</a>
-          <a href="#" class="hover:underline">Privacy Policy</a>
-        </nav>
-        <!-- Copyright -->
-        <p class="text-sm">&copy; BidHive all rights reserved 2025</p>
-      </div>
-    </footer>
   </body>
 </html>

@@ -1,3 +1,4 @@
+// File: /javascript/auth/auth.mjs
 import api from '../api/axios.mjs';
 import { storeAccessToken } from './accessToken.mjs';
 
@@ -7,13 +8,13 @@ import { storeAccessToken } from './accessToken.mjs';
 export async function registerUser(username, email, password) {
   try {
     const response = await api.post('/auth/register', {
-      name: username, // The API expects "name" for the username field
+      name: username, 
       email,
       password,
     });
     return response.data;
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('Registration error:', error.response?.data || error);
     throw error;
   }
 }
@@ -21,40 +22,44 @@ export async function registerUser(username, email, password) {
 /**
  * Login User
  */
-export async function loginUser(email, password) {
+export const loginUser = async (credentials) => {
   try {
-    // 1) POST /auth/login
-    const response = await api.post('/auth/login', { email, password });
+    const response = await api.post('/auth/login', credentials);
+    return response.data; // shape: { data: { accessToken, ... }, meta: {} }
+  } catch (error) {
+    console.error('Login failed:', error.response?.data || error);
+    throw error;
+  }
+};
 
-    // 2) Log the entire response so you see what the server returns
-    console.log('Login full response:', response.data);
+/**
+ * Handle Login
+ */
+export async function handleLogin(credentials, setUserCallback) {
+  try {
+    const response = await loginUser(credentials);
+    // 'response' shape: { data: { accessToken: '...', name: '...', email: '...' }, meta: {} }
+    const data = response.data; // e.g. { accessToken, name, email, ... }
 
-    // The Auction API might return something like:
-    // { data: { accessToken: "...", name: "User", ... }, meta: {} }
-    // Or maybe { data: { token: "..." }, ... }
-
-    // 3) Destructure from response.data.data if that's the shape
-    const maybeData = response.data.data || {}; // fallback to empty obj
-    console.log('Login response data (inner):', maybeData);
-
-    // 4) Attempt to grab either "accessToken" or "token"
-    const { accessToken, token } = maybeData;
-
-    // 5) If we find one of them, store it
-    if (accessToken) {
-      storeAccessToken(accessToken);
-      console.log('Access token stored from "accessToken":', accessToken);
-    } else if (token) {
-      storeAccessToken(token);
-      console.log('Access token stored from "token":', token);
-    } else {
-      console.warn('No token found in login response. Check the API structure.');
+    // 1) Store the token
+    if (data.accessToken) {
+      storeAccessToken(data.accessToken);
     }
 
-    // 6) Return the entire response if needed
-    return response.data;
+    // 2) Save the entire user object in localStorage if needed
+    localStorage.setItem('user', JSON.stringify(response));
+    if (data.email) {
+      localStorage.setItem('userEmail', data.email);
+    }
+
+    // 3) Update UI state
+    if (setUserCallback) {
+      setUserCallback(data);
+    }
+
+    return data;
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Error logging in:', error.response?.data || error);
     throw error;
   }
 }
