@@ -8,10 +8,14 @@ setupHamburgerMenu({
 });
 
 
-import { initProfileModal } from './profileModal.mjs';
+
+import { initSearchBar } from './utils/searchBar.mjs';
 
 document.addEventListener('DOMContentLoaded', () => {
-  initProfileModal();
+  // other universal inits, e.g. hamburger toggler, etc.
+  initSearchBar(); // This will attach the event listener to .searchBar
 });
+
+
 
 

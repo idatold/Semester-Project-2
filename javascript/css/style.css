@@ -6,3 +6,12 @@
 @tailwind utilities;
 
 
+.hexagon {
+    
+    clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+    -webkit-clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+    object-fit: cover;
+  }
+  
+
+

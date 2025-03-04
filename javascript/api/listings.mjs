@@ -1,36 +1,22 @@
-// listings.mjs
+// File: /javascript/api/listings.mjs
 import api from '../api/axios.mjs';
 
-/**
- * Get ALL listings (unchanged)
- */
-export async function getAllListings() {
-  try {
-    const response = await api.get('/auction/listings');
-    return response.data.data;
-  } catch (error) {
-    console.error('Failed to fetch listings:', error);
-    throw error;
-  }
-}
 
 /**
- * NEW: Get ACTIVE listings (not ended) with pagination
+ * Get ACTIVE listings (not ended), including bids
+ * (no pagination)
  */
 export async function getActiveListings(page = 1) {
   try {
-    // The Auction API supports: 
-    // _active=true => only not-ended
-    // _page=page => which page to fetch
-    // You can add &_limit=10 if you want 10 per page
-    const response = await api.get(`/auction/listings?_active=true&_page=${page}`);
-    // This typically returns { data: [...], meta: {...} }
+    const response = await api.get(`/auction/listings?_active=true&_page=${page}&_bids=true`);
+    // This should be { data: [...], meta: {...} }
     return response.data;
   } catch (error) {
     console.error('Failed to fetch active listings:', error);
     throw error;
   }
 }
+
 
 /**
  * Get ONE listing by ID (unchanged)

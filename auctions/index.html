@@ -10,26 +10,28 @@
     />
     <title>BidHive</title>
 
-    <!-- Main JS entry (where we import the hamburger toggler, etc.) -->
+    <!-- Main JS entry -->
     <script type="module" src="/javascript/mainAuctions.mjs"></script>
   </head>
 
-  <body class="bg-gray-100 font-heading">
-    <!-- NAVBAR (fixed top, z-50) -->
+  <body class="bg-[#F8F1E8] font-heading">
+    <!-- NAVBAR -->
     <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
       <!-- DESKTOP TOP BAR (≥900px) -->
       <div class="hidden md2:flex h-44 items-center px-6 justify-between">
         <!-- Left: Logo -->
         <div class="flex-shrink-0">
-          <img src="/assets/BidHiveLogo.svg" alt="BidHive logo" />
+          <a href="/">
+            <img src="/assets/BidHiveLogo.svg" alt="BidHive logo" />
+          </a>
         </div>
 
-        <!-- Middle: Search bar truly centered with mx-auto -->
+        <!-- Search bar -->
         <div class="mx-auto">
           <input
             type="text"
             placeholder="Search..."
-            class="px-4 py-2 border border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 focus:border-yellow-700"
+            class="searchBar px-4 py-2 border border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 focus:border-yellow-700"
           />
         </div>
 
@@ -50,49 +52,46 @@
                 fill="#956B1B"
               />
             </svg>
-            <span class="credits-count">1000</span>
+            <!-- Credits -->
+            <div class="profile-credits text-yellow-700"></div>
           </div>
 
-          <!-- Profile -->
+          <!-- Profile Button -->
           <button
             id="profile-btn"
-            class="p-2 px-10 text-yellow-700 focus:outline-none"
+            class="p-2 px-10 text-yellow-700"
             type="button"
             aria-label="Open Profile Modal"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="34"
-              height="34"
-              viewBox="0 0 34 34"
-              fill="none"
-            >
-              <!-- Profile portrait SVG paths -->
-              <path
-                d="M17.1905 19.4195C17.1588 19.4195 17.1114 19.4195 17.0798 19.4195C17.0323 19.4195 16.9691 19.4195 16.9216 19.4195C13.3318 19.3088 10.6434 16.5098 10.6434 13.0623C10.6434 9.5516 13.5058 6.68927 17.0165 6.68927C20.5272 6.68927 23.3895 9.5516 23.3895 13.0623C23.3737 16.5256 20.6695 19.3088 17.2379 19.4195C17.2063 19.4195 17.2063 19.4195 17.1905 19.4195ZM17.0007 9.04555C14.7867 9.04555 12.9997 10.8483 12.9997 13.0465C12.9997 15.213 14.6919 16.9684 16.8426 17.0474C16.89 17.0316 17.0481 17.0316 17.2063 17.0474C19.3253 16.9367 20.9858 15.1972 21.0016 13.0465C21.0016 10.8483 19.2146 9.04555 17.0007 9.04555Z"
-                fill="#956B1B"
-              />
-              <path
-                d="M17.0014 34.0001C12.7474 34.0001 8.68323 32.4188 5.53626 29.5406C5.25161 29.2876 5.12509 28.9081 5.15672 28.5443C5.3623 26.6625 6.53254 24.9071 8.47765 23.6104C13.1902 20.4792 20.8283 20.4792 25.5251 23.6104C27.4702 24.9229 28.6404 26.6625 28.846 28.5443C28.8935 28.9239 28.7511 29.2876 28.4665 29.5406C25.3195 32.4188 21.2553 34.0001 17.0014 34.0001ZM7.63951 28.2281C10.2646 30.4262 13.5697 31.6281 17.0014 31.6281C20.433 31.6281 23.7381 30.4262 26.3632 28.2281C26.0786 27.2634 25.3195 26.3304 24.1967 25.5713C20.3065 22.9778 13.7121 22.9778 9.79021 25.5713C8.66742 26.3304 7.92416 27.2634 7.63951 28.2281Z"
-                fill="#956B1B"
-              />
-              <path
-                d="M17 34C7.62233 34 0 26.3777 0 17C0 7.62233 7.62233 0 17 0C26.3777 0 34 7.62233 34 17C34 26.3777 26.3777 34 17 34ZM17 2.37209C8.93488 2.37209 2.37209 8.93488 2.37209 17C2.37209 25.0651 8.93488 31.6279 17 31.6279C25.0651 31.6279 31.6279 25.0651 31.6279 17C31.6279 8.93488 25.0651 2.37209 17 2.37209Z"
-                fill="#956B1B"
-              />
-            </svg>
+            <span id="profile-btn-text">Login</span>
           </button>
+
+          <!-- Profile Dropdown (visible when logged in) -->
+          <div
+            id="profile-dropdown"
+            class="hidden absolute right-0 mt-10 w-48 bg-white border border-gray-200 rounded-md shadow-lg"
+          >
+            <a
+              href="/profile/index.html"
+              class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >Profile</a
+            >
+            <button
+              id="logout-btn"
+              class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- MOBILE NAV BAR (<900px) -->
       <div class="md2:hidden w-full px-6 py-4 flex flex-col items-center">
         <!-- 1) Logo on top (centered) -->
-        <img
-          src="/assets/BidHiveLogo.svg"
-          alt="BidHive logo"
-          class="mb-4 mx-auto"
-        />
+        <a href="/">
+          <img src="/assets/BidHiveLogo.svg" alt="BidHive logo" />
+        </a>
 
         <!-- 2) Row with search bar in the middle & hamburger on the right -->
         <div
@@ -141,14 +140,18 @@
       <div
         class="border-t border-yellow-700 bg-white hidden md2:flex justify-center space-x-6 py-4 text-yellow-700 font-bold text-2xl"
       >
-        <a href="#" class="hover:underline">Art</a>
-        <a href="#" class="hover:underline">Books</a>
-        <a href="#" class="hover:underline">Vintage</a>
-        <a href="#" class="hover:underline">Interiors</a>
-        <a href="#" class="hover:underline">Decor</a>
-        <a href="#" class="hover:underline">Jewelry</a>
-        <a href="#" class="hover:underline">Collectibles</a>
-        <a href="#" class="hover:underline">Games</a>
+        <a href="#" data-category="Art" class="hover:underline">Art</a>
+        <a href="#" data-category="Books" class="hover:underline">Books</a>
+        <a href="#" data-category="Vintage" class="hover:underline">Vintage</a>
+        <a href="#" data-category="Interiors" class="hover:underline"
+          >Interiors</a
+        >
+        <a href="#" data-category="Decor" class="hover:underline">Decor</a>
+        <a href="#" data-category="Jewelry" class="hover:underline">Jewelry</a>
+        <a href="#" data-category="Collectibles" class="hover:underline"
+          >Collectibles</a
+        >
+        <a href="#" data-category="Games" class="hover:underline">Games</a>
       </div>
 
       <!-- MOBILE MENU (full screen) -->
@@ -195,10 +198,10 @@
                 fill="#956B1B"
               />
             </svg>
-            <span class=" credits-count text-yellow-700 font-semibold">1000</span>
+            <span class="text-yellow-700 font-semibold">1000</span>
           </div>
 
-          <!-- Profile -->
+          <!-- Profile (for mobile, this remains a simple link) -->
           <a href="#" class="p-2 px-10">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -225,14 +228,16 @@
         </div>
 
         <!-- Mobile Categories -->
-        <a href="#" class="hover:underline">Art</a>
-        <a href="#" class="hover:underline">Books</a>
-        <a href="#" class="hover:underline">Vintage</a>
-        <a href="#" class="hover:underline">Interiors</a>
-        <a href="#" class="hover:underline">Decor</a>
-        <a href="#" class="hover:underline">Jewelry</a>
-        <a href="#" class="hover:underline">Collectibles</a>
-        <a href="#" class="hover:underline">Games</a>
+        <a href="#" data-category="Art" class="hover:underline">Art</a>
+        <a href="#" data-category="Books" class="hover:underline">Books</a>
+        <a href="#" data-category="Vintage" class="hover:underline">Vintage</a>
+        <a href="#" data-category="Interiors" class="hover:underline">Interiors</a>
+        <a href="#" data-category="Decor" class="hover:underline">Decor</a>
+        <a href="#" data-category="Jewelry" class="hover:underline">Jewelry</a>
+        <a href="#" data-category="Collectibles" class="hover:underline"
+          >Collectibles</a
+        >
+        <a href="#" data-category="Games" class="hover:underline">Games</a>
       </div>
 
       <!-- MODAL -->
@@ -288,6 +293,7 @@
                       type="password"
                       id="login-password"
                       name="password"
+                      autocomplete="current-password"
                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
                     />
                   </div>
@@ -298,7 +304,6 @@
                     Login
                   </button>
                 </form>
-
                 <p class="mt-4">
                   Don’t have an account?
                   <button
@@ -309,7 +314,6 @@
                   </button>
                 </p>
               </div>
-
               <!-- Right side: Brand -->
               <div
                 class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center"
@@ -320,7 +324,6 @@
                     alt="BidHive Logo"
                     class="mx-auto mb-4"
                   />
-                  <!-- Optional decorative text/graphics here -->
                 </div>
               </div>
             </div>
@@ -339,11 +342,9 @@
                   />
                 </div>
               </div>
-
               <!-- Right side: Register Form -->
               <div class="w-1/2 flex flex-col justify-center p-8">
                 <h2 class="text-3xl font-bold mb-6">Register</h2>
-                <!-- REGISTER FORM -->
                 <form id="register-form">
                   <div class="mb-4">
                     <label
@@ -379,6 +380,7 @@
                       type="password"
                       id="register-password"
                       name="password"
+                      autocomplete="new-password"
                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
                     />
                   </div>
@@ -389,7 +391,6 @@
                     Register
                   </button>
                 </form>
-
                 <p class="mt-4">
                   Already have an account?
                   <button
@@ -407,8 +408,7 @@
     </nav>
     <!-- END NAVBAR -->
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-grow pt-44">
+    <main class="pt-44 px-6">
       <!-- New Listing Button -->
       <button
         class="mt-32 my-6 mx-auto block bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-800 transition"
@@ -416,12 +416,40 @@
         New Listing
       </button>
 
-      <!-- Listings Container -->
-      <section
-        id="listings-container"
-        class="flex flex-wrap gap-6 justify-center max-w-6xl mx-auto px-6"
-      >
-        <p class="text-gray-500 w-full text-center">Loading auctions...</p>
+      <!-- Centered Page Title -->
+      <h1 class="flex text-3xl font-bold justify-center">All Listings</h1>
+
+      <section class="max-w-6xl mx-auto">
+        <!-- Dropdown row (left-aligned) -->
+        <div class="flex items-center mt-6 mb-6">
+          <!-- optional label -->
+          <label for="sortDropdown" class="mr-2 font-semibold text-lg"></label>
+          <select
+            id="sortDropdown"
+            class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+          >
+            <option value="newest">Newest</option>
+            <option value="mostBids">Most Bids</option>
+            <option value="highestPrice">Highest Price</option>
+            <option value="lowestPrice">Lowest Price</option>
+            <option value="endingSoonest">Ending Soonest</option>
+          </select>
+        </div>
+
+        <!-- Listings container, now using CSS Grid -->
+        <!-- 
+          - grid-cols-1 => 1 column on smallest screens
+          - sm:grid-cols-2 => 2 columns on >=640px
+          - md:grid-cols-3 => 3 columns on >=768px
+          - gap-6 => spacing between cards
+          - justify-items-center => center each card in its grid cell
+        -->
+        <div
+          id="listings-container"
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center"
+        >
+          <p class="text-gray-500 w-full text-center">Loading auctions...</p>
+        </div>
       </section>
     </main>
 
