@@ -11,11 +11,11 @@ const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    'X-Noroff-API-Key': API_KEY, // Attach your API key here
+    'X-Noroff-API-Key': API_KEY, 
   },
 });
 
-// 4. Interceptor to attach token if available
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
