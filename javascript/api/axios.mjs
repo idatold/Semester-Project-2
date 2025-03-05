@@ -4,7 +4,7 @@ import axios from 'axios';
 const API_BASE_URL = 'https://v2.api.noroff.dev';
 
 // 2. Access your API key from Vite environment variables
-const API_KEY = import.meta.env.VITE_API_KEY;
+const API_KEY = import.meta.env.VITE_API_KEY; // Must not be undefined
 
 // 3. Create an Axios instance
 const api = axios.create({

@@ -1,6 +1,18 @@
-import './main.mjs'; // shared nav toggles, etc.
+// File: /javascript/mainSingleListings.mjs
+import './main.mjs'; // shared nav toggles, dropdowns, etc.
 import { getSingleListing, bidOnListing } from '../javascript/api/listings.mjs';
 import { formatDateWithBreak, formatDateNoBreak } from './api/dateFormatter.mjs';
+import { updateCredits } from './api/profile.mjs';
+import { initProfileModal } from './loginAndRegisterModal.mjs';
+
+document.addEventListener('DOMContentLoaded', () => {
+  initProfileModal();
+});
+
+
+
+// Update credits on page load.
+updateCredits();
 
 // The container in your listing HTML
 const container = document.getElementById('listing-container');
@@ -50,12 +62,12 @@ async function loadListing() {
 function createSingleListingLayout(listing) {
   // 1) Outer container for the back link + card
   const outerContainer = document.createElement('div');
-  outerContainer.className = 'w-full flex flex-col items-center';
+  outerContainer.className = 'flex flex-col items-center';
 
   // 2) Back link row
   const backLinkRow = document.createElement('div');
-  backLinkRow.className = 'w-full max-w-4xl px-4 mb-4';
-  backLinkRow.style.textAlign = 'left';
+  backLinkRow.className = 'w-full max-w-4xl px-4 mb-6';
+  backLinkRow.style.textAlign = 'center';
 
   const backLink = document.createElement('a');
   backLink.href = '/auctions/index.html';
@@ -89,7 +101,7 @@ function createSingleListingDOM(listing) {
 
   const card = document.createElement('div');
   card.className = 'bg-white shadow-md rounded p-6 flex flex-col items-center';
-  card.style.width = '520px';
+  card.style.width = '540px';
   card.style.margin = '0 auto';
   card.style.fontFamily = 'Beiruti'; 
 
@@ -136,7 +148,6 @@ function createSingleListingDOM(listing) {
   avatarEl.style.width = '50px';
   avatarEl.style.height = '50px';
   avatarEl.style.objectFit = 'cover';
-  // A regular hex with top/bottom points
   avatarEl.style.clipPath = 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)';
   avatarEl.style.marginBottom = '8px';
 
@@ -194,7 +205,7 @@ function createSingleListingDOM(listing) {
     // Show the place bid input + button
     const bidContainer = document.createElement('div');
     bidContainer.className = 'flex flex-col w-full mb-4';
-    bidContainer.style.fontSize = '1.25rem'; // text-xl
+    bidContainer.style.fontSize = '1.25rem';
     bidContainer.style.fontWeight = 'normal';
     bidContainer.style.textAlign = 'center';
 
@@ -241,30 +252,25 @@ function createSingleListingDOM(listing) {
   const ulEl = document.createElement('ul');
   ulEl.style.textAlign = 'left';
 
-  // -- START OF CHANGE: sort bids descending by amount
   if (bids && bids.length > 0) {
-    // Sort the array so highest bid is first
+    // Sort bids descending by amount
     const sortedBids = [...bids].sort((a, b) => b.amount - a.amount);
 
     sortedBids.forEach(bid => {
-      // Each row is text-xl
       const liEl = document.createElement('li');
       liEl.className = 'flex w-full text-xl py-2 border-b last:border-0';
       liEl.style.fontWeight = 'normal';
 
-      // Bidder on the left
       const bidderSpan = document.createElement('span');
       bidderSpan.style.width = '33%';
       bidderSpan.style.textAlign = 'left';
       bidderSpan.textContent = bid.bidder?.name || 'Unknown';
 
-      // Amount in the center
       const amountSpan = document.createElement('span');
       amountSpan.style.width = '33%';
       amountSpan.style.textAlign = 'center';
       amountSpan.textContent = bid.amount;
 
-      // Date on the right
       const dateSpan = document.createElement('span');
       dateSpan.style.width = '33%';
       dateSpan.style.textAlign = 'right';
@@ -283,12 +289,10 @@ function createSingleListingDOM(listing) {
     noBidsLi.textContent = 'No bids yet.';
     ulEl.appendChild(noBidsLi);
   }
-  // -- END OF CHANGE
 
   bidHistoryDiv.appendChild(ulEl);
   card.appendChild(bidHistoryDiv);
 
-  // Return the final card
   return card;
 }
 
@@ -296,11 +300,9 @@ function createSingleListingDOM(listing) {
  * A simple modal for enlarging the image
  */
 function openImageModal(imageUrl) {
-  // Create overlay
   const overlay = document.createElement('div');
   overlay.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
 
-  // Big image
   const bigImage = document.createElement('img');
   bigImage.src = imageUrl;
   bigImage.className = 'rounded shadow-lg cursor-pointer';
@@ -311,19 +313,17 @@ function openImageModal(imageUrl) {
   overlay.appendChild(bigImage);
   document.body.appendChild(overlay);
 
-  // Close modal on overlay click
   overlay.addEventListener('click', () => {
     document.body.removeChild(overlay);
   });
 
-  // Stop click on bigImage from closing
   bigImage.addEventListener('click', (e) => {
     e.stopPropagation();
   });
 }
 
 /**
- * The handleBid function (re-used in createSingleListingDOM)
+ * The handleBid function
  */
 async function handleBid() {
   try {
@@ -341,21 +341,17 @@ async function handleBid() {
 
     if (updatedListing) {
       alert('Bid placed successfully!');
-
-      // Rebuild the DOM with the updated listing
       container.innerHTML = '';
       const newLayout = createSingleListingLayout(updatedListing);
       container.appendChild(newLayout);
-
     } else {
       alert('Bid placed, but no updated data returned.');
     }
-
   } catch (error) {
     console.error('Failed to place bid:', error);
     alert('Error placing bid. Check console for details.');
   }
 }
 
-// Finally, call loadListing
+// Kick off by loading the listing.
 loadListing();
