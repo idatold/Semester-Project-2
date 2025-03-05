@@ -52,15 +52,17 @@ export async function deleteListing(id) {
   }
 }
 
-export async function getAllListings(page = 1) {
+
+// In listings.mjs - update getAllListings
+export async function getAllListings(page = 1, limit = 20) {
   try {
     const response = await api.get(
-      `/auction/listings?_bids=true&_seller=true&sort=created&order=desc&_page=${page}`
+      `/auction/listings?_bids=true&_seller=true&sort=created&order=desc&_page=${page}&_limit=${limit}`
     );
-    return response.data; // includes ended listings as well
+    return response.data;
   } catch (error) {
-    console.error('Failed to fetch auctions:', error.response?.data || error);
-    throw error;
+    console.error('Failed to fetch auctions:', error);
+    return { data: [], meta: { isLastPage: true } }; // Return safe empty data
   }
 }
 

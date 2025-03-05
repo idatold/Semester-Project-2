@@ -18,6 +18,7 @@ import {
 } from './utils/sortAuctions.mjs';
 import { updateCredits } from './api/profile.mjs';
 
+
 // DOM references
 const listingsContainer = document.getElementById('listings-container');
 const categoryLinks = document.querySelectorAll('[data-category]');
@@ -120,118 +121,133 @@ function getHighestBid(bidsArray) {
   return Math.max(...amounts);
 }
 
-/**
- * Render auctions
- */
-function renderListings(auctions) {
-  listingsContainer.innerHTML = '';
+export function renderListings(auctions, container = listingsContainer) {
+  container.innerHTML = '';
 
   if (!auctions || auctions.length === 0) {
-    listingsContainer.innerHTML = '<p>No auctions found.</p>';
+    container.innerHTML = '<p class="text-gray-500 text-center">No auctions found.</p>';
     return;
   }
 
-  // Check if user is logged in
-  const token = localStorage.getItem('token');
-  let loggedInUsername = null;
-  if (token) {
-    const userString = localStorage.getItem('user');
-    if (userString) {
-      const userObj = JSON.parse(userString);
-      loggedInUsername = userObj?.data?.name || null;
-    }
-  }
+  const truncate = (text = '', max = 50) => 
+    text.length > max ? text.substring(0, max - 3) + '...' : text;
+
+  const getTimeLeft = (endsAt) => {
+    const now = new Date();
+    const end = new Date(endsAt);
+    const diffMs = end - now;
+    if (diffMs <= 0) return 'Ended';
+    
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m left`;
+  };
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const loggedInUsername = user?.data?.name || null;
 
   auctions.forEach((listing) => {
     const { id, title, description, media, endsAt, bids, seller } = listing;
+    const highestBid = bids?.length > 0 
+      ? Math.max(...bids.map(b => b.amount))
+      : 'No bids yet';
 
-    // Card container
     const card = document.createElement('div');
-    card.className =
-      'bg-white shadow-md rounded-lg overflow-hidden flex flex-col max-w-xs w-full h-auto';
+    card.className = 'bg-white shadow-md rounded-lg overflow-hidden flex flex-col w-full h-full hover:shadow-lg transition-shadow group';
 
-    // Image container
-    const imageContainer = document.createElement('div');
-    imageContainer.className = 'w-full h-56 flex items-center justify-center p-4';
-    const imageUrl = media?.[0]?.url || 'https://fakeimg.pl/600x400?text=??';
-    const imageEl = document.createElement('img');
-    imageEl.src = imageUrl;
-    imageEl.alt = title || 'No title';
-    imageEl.className = 'object-cover w-full h-full rounded';
-    imageContainer.appendChild(imageEl);
-    card.appendChild(imageContainer);
+    // Media section
+    const mediaUrl = media?.[0]?.url || 'https://fakeimg.pl/600x400?text=??';
+    const mediaAlt = media?.[0]?.alt || title || 'Auction image';
+    
+    card.innerHTML = `
+      <div class="w-full h-48 flex items-center justify-center p-4 bg-gray-100 cursor-pointer">
+        <img src="${mediaUrl}" 
+             alt="${mediaAlt}" 
+             class="object-cover w-full h-full rounded-lg">
+      </div>
 
-    // Text area
-    const textArea = document.createElement('div');
-    textArea.className = 'flex flex-col justify-between p-4';
-    const textWrapper = document.createElement('div');
+      <div class="p-4 flex flex-col justify-between flex-grow">
+        <div class="cursor-pointer">
+          <h2 class="text-base font-bold mb-2 font-heading">
+            ${truncate(title || 'Untitled Auction', 40)}
+          </h2>
 
-    const h2 = document.createElement('h2');
-    h2.className = 'text-lg font-bold mb-2';
-    h2.textContent = truncateText(title || 'Untitled', 30);
+          <p class="text-gray-600 text-sm mb-2 line-clamp-3 font-beiruti">
+            ${truncate(description || 'No description provided', 100)}
+          </p>
 
-    const descP = document.createElement('p');
-    descP.className = 'text-gray-600 mb-2 font-beiruti';
-    descP.textContent = truncateText(
-      description || 'No description provided.',
-      60
-    );
+          <div class="flex justify-between items-center text-sm font-beiruti mt-3">
+            <span class="font-semibold text-gray-700">
+              ${typeof highestBid === 'number' ? `Current bid: $${highestBid}` : highestBid}
+            </span>
+            <span class="${new Date(endsAt) < new Date() ? 'text-red-600' : 'text-blue-600'} font-medium">
+              ${getTimeLeft(endsAt)}
+            </span>
+          </div>
+        </div>
 
-    const highestBid = getHighestBid(bids);
-    const bidP = document.createElement('p');
-    bidP.className = 'font-semibold text-md font-beiruti';
-    bidP.textContent = `Current Bid: ${highestBid}`;
+        <div class="mt-4 flex justify-between items-center">
+          <a href="/auctions/listing/index.html?id=${id}" 
+             class="view-btn text-white px-3 py-1.5 rounded transition text-sm bg-[#9B7E47] hover:bg-[#866C3C] font-beiruti">
+            View Listing
+          </a>
+          
+          ${loggedInUsername && seller?.name === loggedInUsername ? `
+            <div class="flex gap-2">
+              <button class="update-btn p-1 hover:bg-gray-100 rounded-full transition-colors z-10"
+                      data-id="${id}"
+                      aria-label="Edit listing">
+                <svg class="w-4 h-4 text-gray-600 hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+              </button>
+              <button class="delete-btn p-1 hover:bg-gray-100 rounded-full transition-colors z-10"
+                      data-id="${id}"
+                      aria-label="Delete listing">
+                <svg class="w-4 h-4 text-gray-600 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
 
-    const timeP = document.createElement('p');
-    timeP.className = 'text-md text-gray-500 font-beiruti';
-    timeP.textContent = `Time remaining: ${getTimeRemaining(endsAt)}`;
+    // Card click handler
+    const handleCardClick = (e) => {
+      if (!e.target.closest('button') && !e.target.closest('a')) {
+        window.location.href = `/auctions/listing/index.html?id=${id}`;
+      }
+    };
 
-    textWrapper.appendChild(h2);
-    textWrapper.appendChild(descP);
-    textWrapper.appendChild(bidP);
-    textWrapper.appendChild(timeP);
-
-    // "View Listing" button
-    const buttonWrapper = document.createElement('div');
-    buttonWrapper.className = 'mt-4 flex justify-center';
-    const viewBtn = document.createElement('button');
-    viewBtn.textContent = 'View Listing';
-    viewBtn.className =
-      'text-white px-4 py-2 rounded transition text-sm bg-[#9B7E47] hover:bg-[#866C3C]';
-    viewBtn.addEventListener('click', () => {
-      window.location.href = `/auctions/listing/index.html?id=${id}`;
+    // Add click handlers to clickable areas
+    card.querySelectorAll('.cursor-pointer').forEach(element => {
+      element.addEventListener('click', handleCardClick);
     });
-    buttonWrapper.appendChild(viewBtn);
-    textArea.appendChild(textWrapper);
-    textArea.appendChild(buttonWrapper);
 
-    // If logged in & user is listing owner => show Update/Delete
+    // Button handlers
     if (loggedInUsername && seller?.name === loggedInUsername) {
-      const ownerActions = document.createElement('div');
-      ownerActions.className = 'flex justify-around mt-4';
-
-      const editBtn = document.createElement('button');
-      editBtn.textContent = 'Update';
-      editBtn.className =
-        'px-3 py-1 text-sm border border-gray-300 rounded bg-white text-black hover:bg-gray-100 transition';
-      editBtn.addEventListener('click', () => openUpdateListingModal(listing));
-
-      const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = 'Delete';
-      deleteBtn.className =
-        'px-3 py-1 text-sm border border-gray-300 rounded bg-white text-black hover:bg-gray-100 transition';
-      deleteBtn.addEventListener('click', () => onDeleteListing(id));
-
-      ownerActions.appendChild(editBtn);
-      ownerActions.appendChild(deleteBtn);
-      textArea.appendChild(ownerActions);
+      card.querySelector('.update-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openUpdateListingModal(listing);
+      });
+      
+      card.querySelector('.delete-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onDeleteListing(id);
+      });
     }
 
-    card.appendChild(textArea);
-    listingsContainer.appendChild(card);
+    container.appendChild(card);
   });
 }
 
+// Update your listings container HTML class to match profile cards:
+// Change this in your HTML:
+// <div id="listings-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto justify-items-center"></div>
 /**
  * Open the new "Update Listing" modal with existing data
  */
@@ -263,9 +279,7 @@ function openUpdateListingModal(listing) {
   updateListingModal.setAttribute('aria-hidden', 'false');
 }
 
-/**
- * Minimal "Delete" listing logic
- */
+
 async function onDeleteListing(listingId) {
   if (!confirm('Are you sure you want to delete this listing?')) return;
 
@@ -341,53 +355,53 @@ function initLoadMoreButton() {
   });
 }
 
-/**
- * Load a specific page of listings with 20 items each
- */
+
 async function loadListings(page) {
   isLoading = true;
   try {
     console.log('Loading page', page);
-
-    // ADDED: limit=20 to fetch 20 per page
+    
     const response = await getAllListings(page, 20);
-    console.log('getAllListings response:', response);
+    console.log('Response:', response);
 
     const { data, meta } = response;
-    console.log("meta from response:", meta);
 
-    if (page === 1 && listingsContainer.innerHTML === 'Loading auctions...') {
-      listingsContainer.innerHTML = '';
+    // Always clear listings when loading a new page
+    if (page === 1) {
+      allAuctions = [];
     }
 
-    // Append new listings to global array
-    data.forEach((listing) => {
-      const alreadyExists = allAuctions.some((item) => item.id === listing.id);
-      if (!alreadyExists) {
-        allAuctions.push(listing);
-      }
-    });
-
+    // Only add NEW listings that don't already exist
+    const newListings = data.filter(newListing => 
+      !allAuctions.some(existing => existing.id === newListing.id)
+    );
+    
+    allAuctions = [...allAuctions, ...newListings];
+    
     applyFilterAndSort();
 
-    // If it's the last page, hide the "Load More" button
-    if (meta.isLastPage) {
-      hasMore = false;
-      const loadMoreBtn = document.getElementById('load-more-btn');
-      if (loadMoreBtn) {
-        loadMoreBtn.style.display = 'none';
+    // Update hasMore state based on API response
+    hasMore = !meta.isLastPage && newListings.length > 0;
+    
+    // Update load more button
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+      loadMoreBtn.style.display = hasMore ? 'block' : 'none';
+      if (!hasMore && allAuctions.length > 0) {
+        loadMoreBtn.textContent = 'No more listings';
       }
     }
+    
   } catch (error) {
-    console.error(`Failed to load listings for page ${page}:`, error);
+    console.error('Loading failed:', error);
+    hasMore = false;
   } finally {
     isLoading = false;
   }
 }
 
-/**
- * Initialize the auctions page
- */
+
+
 async function initAuctionsPage() {
   console.log('initAuctionsPage called');
 
@@ -395,6 +409,8 @@ async function initAuctionsPage() {
   if (params.has('category')) {
     currentCategory = params.get('category');
   }
+
+  initSearch();
 
   if (sortDropdown) {
     sortDropdown.value = 'newest';
@@ -439,6 +455,7 @@ categoryLinks.forEach((link) => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     const selectedCategory = link.dataset.category || 'all';
+    console.log('Category changed to:', selectedCategory); // Add this line
     if (!window.location.pathname.includes('/auctions/')) {
       window.location.href = `/auctions/index.html?category=${encodeURIComponent(
         selectedCategory

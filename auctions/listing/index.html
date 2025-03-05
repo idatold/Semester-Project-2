@@ -102,12 +102,18 @@
           <div></div>
 
           <!-- Center column: Search bar -->
-          <div>
+          <!-- Search bar component -->
+          <div class="mx-auto flex gap-2 max-w-2xl px-4">
             <input
               type="text"
-              placeholder="Search..."
-              class="px-4 py-2 border border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 focus:border-yellow-700 w-full max-w-[calc(100vw-100px)] sm:max-w-md mx-auto"
+              placeholder="Search auctions..."
+              class="searchBar px-4 py-2 border border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 focus:border-yellow-700 w-full"
             />
+            <button
+              class="search-btn px-4 py-2 bg-[#9B7E47] text-white rounded-lg hover:bg-[#866C3C] transition-colors whitespace-nowrap"
+            >
+              Search
+            </button>
           </div>
 
           <!-- Right column: Hamburger -->
@@ -184,7 +190,7 @@
           </div>
 
           <!-- Profile (for mobile, this remains a simple link) -->
-          <a href="#" class="p-2 px-10">
+          <a href="/profile/index.html" class="p-2 px-10">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="34"
@@ -208,6 +214,12 @@
             </svg>
           </a>
         </div>
+        <a
+          href="#"
+          id="logout-btn-mobile"
+          class="p-2 px-6 text-yellow-700 font-semibold"
+          >Log Out</a
+        >
       </div>
 
       <!-- MODAL -->
@@ -394,9 +406,7 @@
           class="mb-4 w-32 h-32"
         />
         <section aria-label="Helpful Links" class="flex space-x-8 mb-6">
-          <a href="#" class="hover:underline">All Listings</a>
-          <a href="#" class="hover:underline">Become a member</a>
-          <a href="#" class="hover:underline">Privacy Policy</a>
+          <a href="/auctions/" class="hover:underline">All Listings</a>
         </section>
         <p class="text-sm">&copy; BidHive all rights reserved 2025</p>
       </div>

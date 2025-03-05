@@ -1,48 +1,38 @@
 import './main.mjs';
 import { updateProfile, updateCredits } from './api/profile.mjs';
 import { setupProfileModals } from './utils/profileModals.mjs';
-import { initProfileCarousels } from './utils/profileCarousels.mjs';
+import { initProfileListings } from './utils/profileListings.mjs';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const userString = localStorage.getItem('user');
-  if (!userString) {
-    console.error('No logged in user found in localStorage.');
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user?.data?.name) {
+    window.location.href = '/login.html';
     return;
   }
-  const userObj = JSON.parse(userString);
-  if (!userObj?.data?.name) {
-    console.error('User data is not in the expected format.');
-    return;
-  }
-  const username = userObj.data.name;
-  console.log('Using stored username (exact):', username);
 
-  // Update the profile page details (name, avatar, bio, banner, etc.)
-  await updateProfile(username);
-  // Update credits in all elements (desktop & mobile)
-  await updateCredits();
-  // Set up any modals (if needed) for profile editing
-  setupProfileModals(username);
-  // Initialize carousels for profile sections
-  await initProfileCarousels(username);
+  try {
+    // Update profile data
+    await updateProfile(user.data.name);
+    await updateCredits();
+    
+    // Initialize profile sections
+    await initProfileListings(user.data.name);
+    
+    // Set up modals
+    setupProfileModals(user.data.name);
 
-  // Attach logout functionality to the desktop navbar logout button
-  const logoutBtnNavbar = document.getElementById('logout-btn-navbar');
-  if (logoutBtnNavbar) {
-    logoutBtnNavbar.addEventListener('click', () => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/'; // Redirect to homepage (or a login page)
-    });
-  }
-
-  // Attach logout functionality to the mobile logout button (if it exists)
-  const logoutBtnMobile = document.getElementById('logout-btn-mobile');
-  if (logoutBtnMobile) {
-    logoutBtnMobile.addEventListener('click', () => {
+    // Logout handlers
+    const handleLogout = () => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/';
-    });
+    };
+    
+    document.getElementById('logout-btn-navbar')?.addEventListener('click', handleLogout);
+    document.getElementById('logout-btn-mobile')?.addEventListener('click', handleLogout);
+
+  } catch (error) {
+    console.error('Profile initialization failed:', error);
+    alert('Error loading profile data. Please try refreshing.');
   }
 });

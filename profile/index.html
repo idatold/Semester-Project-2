@@ -6,23 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Your customizable profile." />
     <title>Profile</title>
-
     <script type="module" src="../javascript/mainProfile.mjs"></script>
   </head>
-
   <body class="bg-[#F8F1E8] font-heading">
-    <!-- NAVBAR -->
     <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
-      <!-- DESKTOP TOP BAR (≥900px) -->
       <div class="hidden md2:flex h-44 items-center px-6 justify-between">
-        <!-- Left: Logo -->
         <div class="flex-shrink-0">
-          <a href="/">
-            <img src="/assets/BidHiveLogo.svg" alt="BidHive logo" />
-          </a>
+          <a href="/"
+            ><img src="/assets/BidHiveLogo.svg" alt="BidHive logo"
+          /></a>
         </div>
-    
-        <!-- Search bar -->
         <div class="mx-auto">
           <input
             type="text"
@@ -30,29 +23,22 @@
             class="searchBar px-4 py-2 border border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 focus:border-yellow-700"
           />
         </div>
-    
-        <!-- Right: Credits & Logout (Desktop) -->
         <div class="flex items-center space-x-4 text-yellow-700 font-semibold">
-          <!-- Credits -->
           <div class="flex items-center space-x-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="34"
               height="34"
-              viewBox="0 0 34 34"
+              viewbox="0 0 34 34"
               fill="none"
             >
-              <!-- Credits SVG paths -->
               <path
                 d="M0 26.9145V29.75C0 32.0941 5.71094 34 12.75 34C19.7891 34 25.5 32.0941 25.5 29.75V26.9145C22.7574 28.8469 17.7437 29.75 12.75 29.75C7.75625 29.75 2.74258 28.8469 0 26.9145ZM21.25 8.5C28.2891 8.5 34 6.59414 34 4.25C34 1.90586 28.2891 0 21.25 0C14.2109 0 8.5 1.90586 8.5 4.25C8.5 6.59414 14.2109 8.5 21.25 8.5ZM0 19.9484V23.375C0 25.7191 5.71094 27.625 12.75 27.625C19.7891 27.625 25.5 25.7191 25.5 23.375V19.9484C22.7574 22.2062 17.7371 23.375 12.75 23.375C7.76289 23.375 2.74258 22.2062 0 19.9484ZM27.625 20.6789C31.4301 19.9418 34 18.5738 34 17V14.1645C32.4594 15.2535 30.1949 15.9973 27.625 16.4555V20.6789ZM12.75 10.625C5.71094 10.625 0 13.0023 0 15.9375C0 18.8727 5.71094 21.25 12.75 21.25C19.7891 21.25 25.5 18.8727 25.5 15.9375C25.5 13.0023 19.7891 10.625 12.75 10.625ZM27.3129 14.3637C31.2973 13.6465 34 12.2387 34 10.625V7.78945C31.6426 9.45625 27.5918 10.3527 23.3285 10.5652C25.2875 11.5148 26.7285 12.7898 27.3129 14.3637Z"
                 fill="#956B1B"
-              />
+              ></path>
             </svg>
-            <!-- Credits element with class "profile-credits" -->
             <div class="profile-credits text-yellow-700"></div>
           </div>
-    
-          <!-- Logout Button -->
           <button
             id="logout-btn-navbar"
             class="p-2 px-10 text-yellow-700 focus:outline-none"
@@ -62,23 +48,12 @@
           </button>
         </div>
       </div>
-    
-      <!-- MOBILE NAV BAR (<900px) -->
       <div class="md2:hidden w-full px-6 py-4 flex flex-col items-center">
-        <!-- Logo on top -->
-        <a href="/">
-          <img src="/assets/BidHiveLogo.svg" alt="BidHive logo" />
-        </a>
-    
-        <!-- Row with search bar & hamburger -->
+        <a href="/"><img src="/assets/BidHiveLogo.svg" alt="BidHive logo" /></a>
         <div
           class="grid w-full items-center"
           style="grid-template-columns: 1fr auto 1fr"
         >
-          <!-- Left spacer -->
-          <div></div>
-    
-          <!-- Center: Search bar -->
           <div>
             <input
               type="text"
@@ -86,8 +61,6 @@
               class="px-4 py-2 border border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 focus:border-yellow-700 w-full max-w-[calc(100vw-100px)] sm:max-w-md mx-auto"
             />
           </div>
-    
-          <!-- Right: Hamburger button -->
           <div class="flex justify-end">
             <button
               id="menu-btn"
@@ -98,27 +71,24 @@
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-8 w-8"
                 fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                viewbox="0 0 24 24"
+                stroke="currentcolor"
                 stroke-width="2"
               >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   d="M4 6h16M4 12h16M4 18h16"
-                />
+                ></path>
               </svg>
             </button>
           </div>
         </div>
       </div>
-    
-      <!-- MOBILE MENU (full screen) -->
       <div
         id="mobile-menu"
         class="hidden md2:hidden fixed top-0 left-0 w-full h-screen z-[60] bg-white text-center text-yellow-700 font-semibold text-xl flex flex-col justify-start items-center space-y-6 pt-8"
       >
-        <!-- Close "X" -->
         <button
           id="close-menu"
           class="absolute top-6 right-6 text-yellow-700 focus:outline-none p-2"
@@ -128,56 +98,59 @@
             xmlns="http://www.w3.org/2000/svg"
             class="h-8 w-8"
             fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+            viewbox="0 0 24 24"
+            stroke="currentcolor"
             stroke-width="2"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               d="M6 18L18 6M6 6l12 12"
-            />
+            ></path>
           </svg>
         </button>
-    
-        <!-- Mobile Credits, Back to Auctions & Logout -->
         <div class="flex flex-col items-center space-y-4 pb-8">
-          <!-- Credits -->
           <div class="flex items-center space-x-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="34"
               height="34"
-              viewBox="0 0 34 34"
+              viewbox="0 0 34 34"
               fill="none"
             >
               <path
                 d="M0 26.9145V29.75C0 32.0941 5.71094 34 12.75 34C19.7891 34 25.5 32.0941 25.5 29.75V26.9145C22.7574 28.8469 17.7437 29.75 12.75 29.75C7.75625 29.75 2.74258 28.8469 0 26.9145ZM21.25 8.5C28.2891 8.5 34 6.59414 34 4.25C34 1.90586 28.2891 0 21.25 0C14.2109 0 8.5 1.90586 8.5 4.25C8.5 6.59414 14.2109 8.5 21.25 8.5ZM0 19.9484V23.375C0 25.7191 5.71094 27.625 12.75 27.625C19.7891 27.625 25.5 25.7191 25.5 23.375V19.9484C22.7574 22.2062 17.7371 23.375 12.75 23.375C7.76289 23.375 2.74258 22.2062 0 19.9484ZM27.625 20.6789C31.4301 19.9418 34 18.5738 34 17V14.1645C32.4594 15.2535 30.1949 15.9973 27.625 16.4555V20.6789ZM12.75 10.625C5.71094 10.625 0 13.0023 0 15.9375C0 18.8727 5.71094 21.25 12.75 21.25C19.7891 21.25 25.5 18.8727 25.5 15.9375C25.5 13.0023 19.7891 10.625 12.75 10.625ZM27.3129 14.3637C31.2973 13.6465 34 12.2387 34 10.625V7.78945C31.6426 9.45625 27.5918 10.3527 23.3285 10.5652C25.2875 11.5148 26.7285 12.7898 27.3129 14.3637Z"
                 fill="#956B1B"
-              />
+              ></path>
             </svg>
-            <span class="profile-credits text-yellow-700 font-semibold">1000</span>
+            <span class="profile-credits text-yellow-700 font-semibold"
+              ></span
+            >
           </div>
-          <!-- Back to Auctions & Logout Row -->
           <div class="flex space-x-4">
-            <a href="/auctions/index.html" class="p-2 px-6 text-yellow-700 font-semibold">Back to Auctions</a>
-            <a href="#" id="logout-btn-mobile" class="p-2 px-6 text-yellow-700 font-semibold">Log Out</a>
+            <a
+              href="/auctions/index.html"
+              class="p-2 px-6 text-yellow-700 font-semibold"
+              >Back to Auctions</a
+            >
+            <a
+              href="#"
+              id="logout-btn-mobile"
+              class="p-2 px-6 text-yellow-700 font-semibold"
+              >Log Out</a
+            >
           </div>
         </div>
-        <!-- Mobile categories removed -->
       </div>
-    
-      <!-- MODAL -->
       <div
         id="profile-modal"
         class="fixed inset-0 z-[999] hidden bg-black/50 flex items-center justify-center"
         aria-hidden="true"
       >
-        <!-- Backdrop (to close modal on click) -->
         <div id="backdrop" class="absolute inset-0"></div>
-        <!-- The "Slider Container" -->
-        <div class="relative w-[90%] max-w-5xl h-auto bg-white shadow-lg rounded-lg overflow-hidden">
-          <!-- Close button -->
+        <div
+          class="relative w-[90%] max-w-5xl h-auto bg-white shadow-lg rounded-lg overflow-hidden"
+        >
           <button
             id="close-modal"
             class="absolute top-4 right-4 text-gray-600 hover:text-black focus:outline-none"
@@ -185,22 +158,19 @@
           >
             ✕
           </button>
-          <!-- The SLIDER: 200% width for 2 slides side by side -->
           <div
             id="slider"
             class="flex w-[200%] transition-transform duration-300 ease-in-out"
             style="transform: translateX(0%)"
           >
-            <!-- SLIDE 1: LOGIN -->
             <div class="w-1/2 flex">
-              <!-- Left side: Login Form -->
               <div class="w-1/2 flex flex-col justify-center p-8">
                 <h2 class="text-3xl font-bold mb-6">Login</h2>
-                <form id="login-form">
+                <form id="login-form" name="login-form">
                   <div class="mb-4">
-                    <label class="block mb-1 font-medium" for="login-email">
-                      Email
-                    </label>
+                    <label class="block mb-1 font-medium" for="login-email"
+                      >Email</label
+                    >
                     <input
                       type="email"
                       id="login-email"
@@ -209,9 +179,9 @@
                     />
                   </div>
                   <div class="mb-4">
-                    <label class="block mb-1 font-medium" for="login-password">
-                      Password
-                    </label>
+                    <label class="block mb-1 font-medium" for="login-password"
+                      >Password</label
+                    >
                     <input
                       type="password"
                       id="login-password"
@@ -237,8 +207,9 @@
                   </button>
                 </p>
               </div>
-              <!-- Right side: Brand -->
-              <div class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center">
+              <div
+                class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center"
+              >
                 <div class="text-center p-6">
                   <img
                     src="/assets/BidHivewhitelogo.png"
@@ -248,10 +219,10 @@
                 </div>
               </div>
             </div>
-            <!-- SLIDE 2: REGISTER -->
             <div class="w-1/2 flex">
-              <!-- Left side: Brand -->
-              <div class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center">
+              <div
+                class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center"
+              >
                 <div class="text-center p-6">
                   <img
                     src="/assets/BidHivewhitelogo.png"
@@ -260,14 +231,15 @@
                   />
                 </div>
               </div>
-              <!-- Right side: Register Form -->
               <div class="w-1/2 flex flex-col justify-center p-8">
                 <h2 class="text-3xl font-bold mb-6">Register</h2>
-                <form id="register-form">
+                <form id="register-form" name="register-form">
                   <div class="mb-4">
-                    <label class="block mb-1 font-medium" for="register-username">
-                      Username
-                    </label>
+                    <label
+                      class="block mb-1 font-medium"
+                      for="register-username"
+                      >Username</label
+                    >
                     <input
                       type="text"
                       id="register-username"
@@ -276,9 +248,9 @@
                     />
                   </div>
                   <div class="mb-4">
-                    <label class="block mb-1 font-medium" for="register-email">
-                      Email
-                    </label>
+                    <label class="block mb-1 font-medium" for="register-email"
+                      >Email</label
+                    >
                     <input
                       type="email"
                       id="register-email"
@@ -287,9 +259,11 @@
                     />
                   </div>
                   <div class="mb-4">
-                    <label class="block mb-1 font-medium" for="register-password">
-                      Password
-                    </label>
+                    <label
+                      class="block mb-1 font-medium"
+                      for="register-password"
+                      >Password</label
+                    >
                     <input
                       type="password"
                       id="register-password"
@@ -320,55 +294,41 @@
         </div>
       </div>
     </nav>
-    
-
     <main class="flex-grow mt-44">
-      <!-- Banner Section -->
       <section class="relative">
-        <!-- Banner image -->
         <img
           class="profile-banner max-h-[168px] w-screen object-cover"
           src="default-banner.png"
           alt="Profile Banner"
         />
-
-        <!-- Username on top of the banner -->
         <div class="absolute inset-0 flex items-center justify-center">
           <div
             class="profile-name font-bold text-3xl text-white drop-shadow bg-[#c5a368] p-2 rounded-md"
           ></div>
         </div>
       </section>
-
-      <!-- Container to add side margins & max width -->
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Row below the banner: Left = Back to Auctions, Right = Log Out -->
         <div class="logoutLink flex justify-between items-center mt-2">
-          <!-- Back to Auctions (left side) -->
           <a
             href="/auctions/index.html"
             class="flex items-center space-x-2 text-gray-800 font-semibold hover:underline"
-          >
-            <!-- Left arrow icon -->
-            <svg
+            ><svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-5 h-5"
               fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+              viewbox="0 0 24 24"
+              stroke="currentcolor"
               stroke-width="2"
             >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
+              ></path>
             </svg>
-            <span>Back to Auctions</span>
-          </a>
+            <span>Back to Auctions</span></a
+          >
         </div>
-
-        <!-- Main profile content -->
         <div class="flex flex-col">
           <div class="navbar flex flex-col items-center space-y-4">
             <div class="flex flex-col items-center space-y-2">
@@ -415,15 +375,13 @@
         </div>
       </div>
     </main>
-
-    <!-- Modal for Updating Banner -->
     <div
       id="modal-banner"
       class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden"
     >
       <div class="bg-white p-6 rounded-md w-11/12 max-w-md">
         <h2 class="text-xl font-bold mb-4">Update Banner</h2>
-        <form id="form-banner">
+        <form id="form-banner" name="form-banner">
           <div class="mb-4">
             <label class="block text-gray-700" for="bannerUrl"
               >Banner URL</label
@@ -433,7 +391,7 @@
               id="bannerUrl"
               name="bannerUrl"
               placeholder="https://example.com/banner.jpg"
-              required
+              required=""
               class="w-full border rounded px-3 py-2"
             />
           </div>
@@ -467,117 +425,48 @@
         </form>
       </div>
     </div>
-    <!-- My Active Auctions Carousel -->
-    <section class="carousel-body-wrapper">
-      <div class="carousel-wrapper relative flex justify-center items-center">
-        <!-- Left arrow button -->
-        <svg
-          id="left-active"
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-6 h-6 text-white cursor-pointer absolute left-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="white"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Active Listings -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Active Listings -->
+        <section class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 font-heading">
+            My Active Listings
+          </h2>
+          <div
+            id="my-listings-container"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto justify-items-center"
+          ></div>
+        </section>
 
-        <!-- Loading spinner for active auctions -->
-        <div id="loading-spinner-active" class="loader" style="display: none">
-          <!-- your spinner markup -->
-          <div>
-            <ul>
-              <!-- spinner SVGs here -->
-            </ul>
-          </div>
-          <span class="reading-loading-spinner"
-            >Loading Active Auctions...</span
-          >
-        </div>
+        <!-- Wins -->
+        <section class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 font-heading">
+            Auctions I've Won
+          </h2>
+          <div
+            id="my-wins-container"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto justify-items-center"
+          ></div>
+        </section>
 
-        <!-- Dynamic Carousel list for Active Auctions -->
-        <ul
-          class="carousel-list-active flex justify-center items-center min-h-[100px] w-full"
-        ></ul>
-
-        <!-- Right arrow button -->
-        <svg
-          id="right-active"
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-6 h-6 text-white cursor-pointer absolute right-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="white"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M14 5l7 7m0 0l-7 7m7-7H3"
-          />
-        </svg>
+        <!-- Bids -->
+        <section class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 font-heading">My Active Bids</h2>
+          <div
+            id="my-bids-container"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto justify-items-center"
+          ></div>
+        </section>
       </div>
-    </section>
-
-    <!-- My Wins Carousel -->
-    <section class="carousel-body-wrapper">
-      <div class="carousel-wrapper relative flex justify-center items-center">
-        <!-- Left arrow button -->
-        <svg
-          id="left-wins"
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-6 h-6 text-white cursor-pointer absolute left-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="white"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
-
-        
-
-        <!-- Dynamic Carousel list for Wins -->
-        <ul
-          class="carousel-list-wins flex justify-center items-center min-h-[100px] w-full"
-        ></ul>
-
-        <!-- Right arrow button -->
-        <svg
-          id="right-wins"
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-6 h-6 text-white cursor-pointer absolute right-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="white"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M14 5l7 7m0 0l-7 7m7-7H3"
-          />
-        </svg>
-      </div>
-    </section>
-
-    <!-- Modal for Updating Avatar -->
+    </div>
     <div
       id="modal-avatar"
       class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden"
     >
       <div class="bg-white p-6 rounded-md w-11/12 max-w-md">
         <h2 class="text-xl font-bold mb-4">Update Avatar</h2>
-        <form id="form-avatar">
+        <form id="form-avatar" name="form-avatar">
           <div class="mb-4">
             <label class="block text-gray-700" for="avatarUrl"
               >Avatar URL</label
@@ -587,7 +476,7 @@
               id="avatarUrl"
               name="avatarUrl"
               placeholder="https://example.com/avatar.jpg"
-              required
+              required=""
               class="w-full border rounded px-3 py-2"
             />
           </div>
@@ -621,15 +510,13 @@
         </form>
       </div>
     </div>
-
-    <!-- Modal for Updating Bio -->
     <div
       id="modal-bio"
       class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden"
     >
       <div class="bg-white p-6 rounded-md w-11/12 max-w-md">
         <h2 class="text-xl font-bold mb-4">Update Bio</h2>
-        <form id="form-bio">
+        <form id="form-bio" name="form-bio">
           <div class="mb-4">
             <label class="block text-gray-700" for="bioText">Bio</label>
             <textarea
@@ -637,7 +524,7 @@
               name="bioText"
               placeholder="Enter your bio"
               rows="4"
-              required
+              required=""
               class="w-full border rounded px-3 py-2"
             ></textarea>
           </div>
@@ -659,24 +546,17 @@
         </form>
       </div>
     </div>
-
     <footer class="bg-[#d1b38c] text-white text-center py-8">
       <div class="flex flex-col items-center">
-        <!-- Logo/Honeycomb Image -->
         <img
           src="/assets/BidHivewhiteloginregister.svg"
           alt="BidHive honeycomb logo"
           class="mb-4 w-32 h-32"
         />
-
-        <!-- Navigation Links -->
-        <nav class="flex space-x-8 mb-6">
-          <a href="#" class="hover:underline">All Listings</a>
-          <a href="#" class="hover:underline">Become a member</a>
-          <a href="#" class="hover:underline">Privacy Policy</a>
-        </nav>
-        <!-- Copyright -->
-        <p class="text-sm">&copy; BidHive all rights reserved 2025</p>
+        <section class="flex space-x-8 mb-6">
+          <a href="/auctions/" class="hover:underline">All Listings</a>
+        </section>
+        <p class="text-sm">© BidHive all rights reserved 2025</p>
       </div>
     </footer>
   </body>
