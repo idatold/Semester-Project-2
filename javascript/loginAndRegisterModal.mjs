@@ -98,7 +98,7 @@ export function initProfileModal() {
           console.log('User set:', user);
         });
         alert('Login successful!');
-        window.location.href = '/profile/index.html';
+        window.location.href = '/profile/';
       } catch (error) {
         console.error('Login error:', error);
         alert('Login failed. Please check your credentials.');
