@@ -231,7 +231,9 @@
         <a href="#" data-category="Art" class="hover:underline">Art</a>
         <a href="#" data-category="Books" class="hover:underline">Books</a>
         <a href="#" data-category="Vintage" class="hover:underline">Vintage</a>
-        <a href="#" data-category="Interiors" class="hover:underline">Interiors</a>
+        <a href="#" data-category="Interiors" class="hover:underline"
+          >Interiors</a
+        >
         <a href="#" data-category="Decor" class="hover:underline">Decor</a>
         <a href="#" data-category="Jewelry" class="hover:underline">Jewelry</a>
         <a href="#" data-category="Collectibles" class="hover:underline"
@@ -409,48 +411,253 @@
     <!-- END NAVBAR -->
 
     <main class="pt-44 px-6">
-      <!-- New Listing Button -->
-      <button
-        class="mt-32 my-6 mx-auto block bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-800 transition"
+      
+      
+
+      <section class="w-full flex justify-center mt-32 ">
+        <div class="max-w-[1120px] w-full px-4">
+          <h2 class="text-3xl font-bold mb-32 text-center">
+            <a href="/auctions/index.html" class="hover:underline">All Listings</a>
+          </h2>
+      
+          <section>
+            <!-- Row with dropdown + new listing button -->
+            <div class="flex items-center justify-center space-x-4 mb-16">
+              <label for="sortDropdown" class="sr-only">Sort by:</label>
+              <select
+                id="sortDropdown"
+                class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+              >
+                <option value="newest">Newly added</option>
+                <option value="allListings">All Listings</option>
+                <option value="mostBids">Most Bids</option>
+                <option value="highestPrice">Highest Price</option>
+                <option value="lowestPrice">Lowest Price</option>
+                <option value="endingSoonest">Ending Soonest</option>
+              </select>
+          
+              <!-- New Listing button (hidden by default) -->
+              <button
+                id="new-listing-btn"
+                class="hidden border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+              >
+                + New Listing
+              </button>
+            </div>
+          
+            <!-- Listings container -->
+            <div
+              id="listings-container"
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center mb-12"
+            >
+              <p class="text-gray-500 w-full text-center">Loading auctions...</p>
+            </div>
+          
+            <!-- Load More button (centered) -->
+            <div class="flex justify-center mt-4">
+              <button
+                id="load-more-btn"
+                class="mx-auto text-white px-4 py-2 rounded transition text-sm bg-yellow-700 hover:bg-yellow-600 mb-32"
+              >
+                Load More
+              </button>
+            </div>
+          </section>
+          
+          
+      <!-- CREATE LISTING MODAL (hidden by default) -->
+      <div
+        id="create-listing-modal"
+        class="fixed inset-0 z-[999] hidden bg-black/50 flex items-center justify-center"
+        aria-hidden="true"
       >
-        New Listing
-      </button>
-
-      <!-- Centered Page Title -->
-      <h1 class="flex text-3xl font-bold justify-center">All Listings</h1>
-
-      <section class="max-w-6xl mx-auto">
-        <!-- Dropdown row (left-aligned) -->
-        <div class="flex items-center mt-6 mb-6">
-          <!-- optional label -->
-          <label for="sortDropdown" class="mr-2 font-semibold text-lg"></label>
-          <select
-            id="sortDropdown"
-            class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+        <!-- Backdrop -->
+        <div id="createListingBackdrop" class="absolute inset-0"></div>
+      
+        <!-- Modal Content -->
+        <div class="relative w-[90%] max-w-lg bg-white shadow-lg rounded-lg overflow-hidden p-6">
+          <!-- Close button -->
+          <button
+            id="close-create-listing"
+            class="absolute top-4 right-4 text-gray-600 hover:text-black focus:outline-none"
+            aria-label="Close Modal"
           >
-            <option value="newest">Newest</option>
-            <option value="mostBids">Most Bids</option>
-            <option value="highestPrice">Highest Price</option>
-            <option value="lowestPrice">Lowest Price</option>
-            <option value="endingSoonest">Ending Soonest</option>
-          </select>
+            ✕
+          </button>
+      
+          <h2 class="text-2xl font-bold mb-4">Create New Listing</h2>
+          <form id="create-listing-form" class="space-y-4">
+            <div>
+              <label for="listing-title" class="block font-semibold mb-1"
+                >Title <span class="text-red-500">*</span></label
+              >
+              <input
+                type="text"
+                id="listing-title"
+                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                required
+              />
+            </div>
+      
+            <div>
+              <label for="listing-description" class="block font-semibold mb-1"
+                >Description</label
+              >
+              <textarea
+                id="listing-description"
+                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                rows="3"
+              ></textarea>
+            </div>
+      
+            <div>
+              <label for="listing-tags" class="block font-semibold mb-1"
+                >Tags (comma separated)</label
+              >
+              <input
+                type="text"
+                id="listing-tags"
+                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                placeholder="e.g. art, painting"
+              />
+            </div>
+      
+            <div>
+              <label for="listing-media" class="block font-semibold mb-1"
+                >Media URL</label
+              >
+              <input
+                type="url"
+                id="listing-media"
+                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                placeholder="https://example.com/image.jpg"
+              />
+              <p class="text-sm text-gray-500 mt-1">
+                Must be a publicly accessible image URL.
+              </p>
+            </div>
+      
+            <div>
+              <label for="listing-endsAt" class="block font-semibold mb-1"
+                >End Date/Time <span class="text-red-500">*</span></label
+              >
+              <input
+                type="datetime-local"
+                id="listing-endsAt"
+                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                required
+              />
+            </div>
+      
+            <button
+              type="submit"
+              class="bg-[#956B1B] text-white px-4 py-2 rounded hover:bg-[#7a5616] transition-colors"
+            >
+              Create
+            </button>
+          </form>
         </div>
+      </div>
+      
+    
+<!-- UPDATE LISTING MODAL (hidden by default) -->
+<div
+  id="update-listing-modal"
+  class="fixed inset-0 z-[999] hidden bg-black/50 flex items-center justify-center"
+  aria-hidden="true"
+>
+  <!-- Backdrop -->
+  <div id="updateListingBackdrop" class="absolute inset-0"></div>
 
-        <!-- Listings container, now using CSS Grid -->
-        <!-- 
-          - grid-cols-1 => 1 column on smallest screens
-          - sm:grid-cols-2 => 2 columns on >=640px
-          - md:grid-cols-3 => 3 columns on >=768px
-          - gap-6 => spacing between cards
-          - justify-items-center => center each card in its grid cell
-        -->
-        <div
-          id="listings-container"
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center"
+  <!-- Modal Content -->
+  <div class="relative w-[90%] max-w-lg bg-white shadow-lg rounded-lg overflow-hidden p-6">
+    <!-- Close button -->
+    <button
+      id="close-update-listing"
+      class="absolute top-4 right-4 text-gray-600 hover:text-black focus:outline-none"
+      aria-label="Close Modal"
+    >
+      ✕
+    </button>
+
+    <h2 class="text-2xl font-bold mb-4">Update Listing</h2>
+
+    <form id="update-listing-form" class="space-y-4">
+      <div>
+        <label for="update-listing-title" class="block font-semibold mb-1"
+          >Title <span class="text-red-500">*</span></label
         >
-          <p class="text-gray-500 w-full text-center">Loading auctions...</p>
-        </div>
-      </section>
+        <input
+          type="text"
+          id="update-listing-title"
+          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+          required
+        />
+      </div>
+
+      <div>
+        <label for="update-listing-description" class="block font-semibold mb-1"
+          >Description</label
+        >
+        <textarea
+          id="update-listing-description"
+          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div>
+        <label for="update-listing-tags" class="block font-semibold mb-1"
+          >Tags (comma separated)</label
+        >
+        <input
+          type="text"
+          id="update-listing-tags"
+          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+          placeholder="e.g. art, painting"
+        />
+      </div>
+
+      <div>
+        <label for="update-listing-media" class="block font-semibold mb-1"
+          >Media URL</label
+        >
+        <input
+          type="url"
+          id="update-listing-media"
+          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+          placeholder="https://example.com/image.jpg"
+        />
+        <p class="text-sm text-gray-500 mt-1">
+          Must be a publicly accessible image URL.
+        </p>
+      </div>
+
+      <div>
+        <label for="update-listing-endsAt" class="block font-semibold mb-1"
+          >End Date/Time <span class="text-red-500">*</span></label
+        >
+        <input
+          type="datetime-local"
+          id="update-listing-endsAt"
+          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+          required
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="bg-[#956B1B] text-white px-4 py-2 rounded hover:bg-[#7a5616] transition-colors"
+      >
+        Update
+      </button>
+    </form>
+  </div>
+</div>
+
+      
+      
+      
     </main>
 
     <!-- FOOTER -->
@@ -462,7 +669,7 @@
           class="mb-4 w-32 h-32"
         />
         <section aria-label="Helpful Links" class="flex space-x-8 mb-6">
-          <a href="#" class="hover:underline">All Listings</a>
+          <a href="/" class="hover:underline">Home Page</a>
           <a href="#" class="hover:underline">Become a member</a>
           <a href="#" class="hover:underline">Privacy Policy</a>
         </section>

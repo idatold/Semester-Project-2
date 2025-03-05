@@ -1,25 +1,72 @@
 // File: /javascript/api/listings.mjs
 import api from '../api/axios.mjs';
 
+/**
+ * Create a new listing
+ */
+export async function createListing({ title, description, tags, media, endsAt }) {
+  try {
+    const body = { title, endsAt };
+    if (description) body.description = description;
+    if (tags) body.tags = tags;
+    if (media) body.media = media;
+
+    const response = await api.post('/auction/listings', body);
+    return response.data.data; // newly created listing
+  } catch (error) {
+    console.error('Failed to create listing:', error);
+    throw error;
+  }
+}
 
 /**
- * Get ACTIVE listings (not ended), including bids
- * (no pagination)
+ * Update a listing
  */
-export async function getActiveListings(page = 1) {
+export async function updateListing(id, { title, description, tags, media }) {
   try {
-    const response = await api.get(`/auction/listings?_active=true&_page=${page}&_bids=true`);
-    // This should be { data: [...], meta: {...} }
-    return response.data;
+    const body = {};
+    if (title) body.title = title;
+    if (description) body.description = description;
+    if (tags) body.tags = tags;
+    if (media) body.media = media;
+
+    const response = await api.put(`/auction/listings/${id}`, body);
+    return response.data.data; // updated listing
   } catch (error) {
-    console.error('Failed to fetch active listings:', error);
+    console.error(`Failed to update listing ${id}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Delete a listing
+ */
+export async function deleteListing(id) {
+  try {
+    // The API returns 204 No Content on success
+    await api.delete(`/auction/listings/${id}`);
+    // Nothing to return
+  } catch (error) {
+    console.error(`Failed to delete listing ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function getAllListings(page = 1) {
+  try {
+    const response = await api.get(
+      `/auction/listings?_bids=true&_seller=true&sort=created&order=desc&_page=${page}`
+    );
+    return response.data; // includes ended listings as well
+  } catch (error) {
+    console.error('Failed to fetch auctions:', error.response?.data || error);
     throw error;
   }
 }
 
 
 /**
- * Get ONE listing by ID (unchanged)
+ * Get ONE listing by ID
  */
 export async function getSingleListing(id, { seller, bids } = {}) {
   try {
@@ -41,11 +88,13 @@ export async function getSingleListing(id, { seller, bids } = {}) {
 }
 
 /**
- * Place a bid on a listing (unchanged)
+ * Place a bid on a listing
  */
 export async function bidOnListing(listingId, amount) {
   try {
-    const response = await api.post(`/auction/listings/${listingId}/bids`, { amount });
+    const response = await api.post(`/auction/listings/${listingId}/bids`, {
+      amount,
+    });
     return response.data.data;
   } catch (error) {
     console.error(`Failed to bid on listing ${listingId}:`, error);

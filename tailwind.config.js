@@ -11,10 +11,12 @@ module.exports = {
 		},
 		extend: {
 			fontFamily: {
-				heading: ["The Seasons", "serif"],
-				body: ["Beiruti", "sans-serif"],
+			  heading: ["The Seasons", "serif"],
+			  body: ["Beiruti", "sans-serif"],
+			  beiruti: ["Beiruti", "sans-serif"], 
 			},
-		},
+		  },
+		  
 	},
 	plugins: [],
 };
