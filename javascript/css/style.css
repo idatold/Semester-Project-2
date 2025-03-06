@@ -13,5 +13,182 @@
     object-fit: cover;
   }
   
-
-
+  #loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  .bee-container {
+    position: relative;
+    margin: 0 auto;
+  }
+  
+  .wing-container {
+    margin: 0 auto;
+    width: 180px;
+    height: 90px;
+  }
+  
+  .leg-container {
+    position: relative;
+    margin: auto;
+    width: 180px;
+  }
+  
+  .face-container {
+    margin: auto;
+    width: 288px;
+    position: relative;
+  }
+  
+  .bee {
+    margin: auto;
+    height: 180px;
+    width: 288px;
+    background-color: rgb(255, 220, 70);
+    border-radius: 180px;
+    border: 8px solid #000;
+    overflow: hidden;
+    position: relative;
+  }
+  .bee .shine {
+    height: 20px;
+    width: 100px;
+    background-color: white;
+    z-index: 7;
+    border-radius: 10px;
+    position: absolute;
+    top: 23px;
+    left: 123px;
+  }
+  
+  .wing {
+    height: 160px;
+    width: 90px;
+    position: relative;
+    background-color: white;
+    border-radius: 100px;
+    border: 8px solid black;
+    box-shadow: inset 0px 0px 0px 10px rgb(170, 250, 255);
+  }
+  .wing#wing1 {
+    left: 20px;
+  }
+  .wing#wing2 {
+    top: -170px;
+    left: 45px;
+    transform: rotate(45deg);
+  }
+  
+  .shadow {
+    background-color: rgb(253, 171, 62);
+    height: 90px;
+    width: 288px;
+    position: relative;
+    top: 90px;
+  }
+  
+  .eye {
+    height: 35px;
+    width: 35px;
+    background-color: black;
+    z-index: 5;
+    position: absolute;
+    border-radius: 35px;
+    top: 60px;
+  }
+  .eye#left {
+    left: -42px;
+  }
+  .eye#right {
+    left: 43px;
+  }
+  
+  .leg {
+    height: 20px;
+    width: 60px;
+    background-color: black;
+    border-radius: 50px;
+    position: relative;
+    transform: rotate(45deg);
+  }
+  .leg#leg1 {
+    left: 50px;
+    top: 2px;
+  }
+  .leg#leg2 {
+    left: 120px;
+    top: -18px;
+  }
+  
+  .smile {
+    position: absolute;
+    width: 20px;
+    height: 10px;
+    border-bottom-left-radius: 110px;
+    border-bottom-right-radius: 110px;
+    border: 7px solid black;
+    border-top: 0;
+    top: 81px;
+    left: 3px;
+    z-index: 5;
+  }
+  
+  .stripe {
+    position: absolute;
+    display: inline-flex;
+    width: 50px;
+    height: 180px;
+    background-color: black;
+    top: 0;
+    animation-duration: 5s;
+    animation-name: dot;
+    transition: ease-in-out;
+    -webkit-animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+  }
+  .stripe#one {
+    margin-left: 100px;
+  }
+  .stripe#two {
+    margin-left: 170px;
+    animation-delay: 0.8s;
+  }
+  .stripe#three {
+    margin-left: 240px;
+    animation-delay: 1.6s;
+  }
+  
+  @keyframes dot {
+    16% {
+      top: 0;
+      height: 180px;
+      border-radius: 0;
+    }
+    33% {
+      top: 67px;
+      height: 50px;
+      border-radius: 50%;
+    }
+    66% {
+      top: 67px;
+      height: 50px;
+      border-radius: 50%;
+    }
+    83% {
+      top: 0;
+      height: 180px;
+      border-radius: 0;
+    }
+  }
+  

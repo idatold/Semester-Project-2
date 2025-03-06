@@ -53,11 +53,12 @@ export async function deleteListing(id) {
 }
 
 
-// In listings.mjs - update getAllListings
-export async function getAllListings(page = 1, limit = 20) {
+// In listings.mjs - update getAllListings to use _start
+export async function getAllListings(page = 1, limit = 40) {
+  const start = (page - 1) * limit;
   try {
     const response = await api.get(
-      `/auction/listings?_bids=true&_seller=true&sort=created&order=desc&_page=${page}&_limit=${limit}`
+      `/auction/listings?_bids=true&_seller=true&sort=created&order=desc&_start=${start}&_limit=${limit}`
     );
     return response.data;
   } catch (error) {
@@ -65,6 +66,7 @@ export async function getAllListings(page = 1, limit = 20) {
     return { data: [], meta: { isLastPage: true } }; // Return safe empty data
   }
 }
+
 
 
 /**

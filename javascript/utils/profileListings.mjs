@@ -48,7 +48,7 @@ async function renderProfileSection({ endpoint, containerId, fallbackText, isBid
           return isValid && isActive;
         });
 
-      console.log('Processed bids:', listings); // Debug output
+     
     }
 
     container.innerHTML = listings.length > 0 
@@ -114,7 +114,7 @@ function createProfileCard(listing) {
   return `
     <div class="bg-white shadow-md rounded-lg overflow-hidden flex flex-col w-full h-full hover:shadow-lg transition-shadow">
       <!-- Image Section -->
-      <div class="w-full h-48 flex items-center justify-center p-4 bg-gray-100">
+      <div class="w-full h-48 flex items-center justify-center p-4 ">
         <img src="${mediaUrl}" 
              alt="${mediaAlt}" 
              class="object-cover w-full h-full rounded-lg">

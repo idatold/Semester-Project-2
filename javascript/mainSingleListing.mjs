@@ -34,7 +34,7 @@ async function loadListing() {
     container.innerHTML = '<p>Loading listing...</p>';
 
     const listing = await getSingleListing(listingId, { seller: true, bids: true });
-    console.log('Single listing object:', listing);
+   
 
     if (!listing) {
       container.innerHTML = '<p>No listing found or an error occurred.</p>';
@@ -54,78 +54,46 @@ async function loadListing() {
   }
 }
 
-/**
- * Create an overall layout with:
- * 1) A back link row (left-aligned)
- * 2) A card that is wider than 500px to accommodate a 500×333 image
- */
+
 function createSingleListingLayout(listing) {
-  // 1) Outer container for the back link + card
+  // Outer container for the back link + card
   const outerContainer = document.createElement('div');
-  outerContainer.className = 'flex flex-col items-center';
+  // Use flex-col, center items, and add responsive padding.
+  outerContainer.className = 'flex flex-col items-center px-4';
 
-  // 2) Back link row
+  // Back link row (centered, responsive)
   const backLinkRow = document.createElement('div');
-  backLinkRow.className = 'w-full max-w-4xl px-4 mb-6';
-  backLinkRow.style.textAlign = 'center';
-
+  backLinkRow.className = 'w-full max-w-4xl mb-6 text-center';
   const backLink = document.createElement('a');
   backLink.href = '/auctions/index.html';
   backLink.className = 'text-lg underline text-gray-600';
   backLink.textContent = '← Back to all auctions';
-
   backLinkRow.appendChild(backLink);
   outerContainer.appendChild(backLinkRow);
 
-  // 3) The actual listing card
+  // The listing card
   const cardEl = createSingleListingDOM(listing);
   outerContainer.appendChild(cardEl);
 
   return outerContainer;
 }
 
-/**
- * Create DOM elements for the single listing card
- */
 function createSingleListingDOM(listing) {
-  const {
-    title,
-    description,
-    media,
-    created,
-    endsAt,
-    bids,
-    seller,
-    tags,
-  } = listing;
+  const { title, description, media, created, endsAt, bids, seller, tags } = listing;
 
   const card = document.createElement('div');
-  card.className = 'bg-white shadow-md rounded p-6 flex flex-col items-center';
-  card.style.width = '540px';
-  card.style.margin = '0 auto';
-  card.style.fontFamily = 'Beiruti'; 
+  card.className = 'bg-white shadow-md rounded p-6 flex flex-col items-center w-full max-w-[540px] mx-auto font-[Beiruti]';
 
-  // 1) Image container (500×333)
+  // 1) Image container (500×333) made responsive
   const imageContainer = document.createElement('div');
-  imageContainer.style.width = '500px';
-  imageContainer.style.height = '333px';
-  imageContainer.style.display = 'flex';
-  imageContainer.style.justifyContent = 'center';
-  imageContainer.style.alignItems = 'center';
-  imageContainer.className = 'mb-4';
-
+  imageContainer.className = 'mb-4 w-full max-w-[500px] flex items-center justify-center';
+  imageContainer.style.aspectRatio = '500 / 333';
   const imageUrl = media?.[0]?.url || 'https://via.placeholder.com/500x333';
   const imageEl = document.createElement('img');
   imageEl.src = imageUrl;
   imageEl.alt = title || 'Untitled';
-  imageEl.style.width = '100%';
-  imageEl.style.height = '100%';
-  imageEl.style.objectFit = 'cover';
-  imageEl.className = 'rounded cursor-pointer';
-
-  // On click => enlarge modal
+  imageEl.className = 'w-full h-full object-cover rounded cursor-pointer';
   imageEl.addEventListener('click', () => openImageModal(imageUrl));
-
   imageContainer.appendChild(imageEl);
   card.appendChild(imageContainer);
 
@@ -140,7 +108,7 @@ function createSingleListingDOM(listing) {
   const sellerTagsContainer = document.createElement('div');
   sellerTagsContainer.className = 'flex flex-col items-center mb-6 w-full';
 
-  // 3a) Hex-shaped avatar
+  // 3a) Hex-shaped avatar (original inline style)
   const avatarUrl = seller?.avatar?.url || 'https://via.placeholder.com/50';
   const avatarEl = document.createElement('img');
   avatarEl.src = avatarUrl;
@@ -150,25 +118,22 @@ function createSingleListingDOM(listing) {
   avatarEl.style.objectFit = 'cover';
   avatarEl.style.clipPath = 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)';
   avatarEl.style.marginBottom = '8px';
-
   sellerTagsContainer.appendChild(avatarEl);
 
   // 3b) Seller name (centered)
   const sellerName = seller?.name || 'Unknown Seller';
   const sellerEl = document.createElement('p');
-  sellerEl.className = 'text-xl text-gray-600 mb-1';
-  sellerEl.style.textAlign = 'center';
+  sellerEl.className = 'text-xl text-gray-600 mb-1 text-center';
   sellerEl.textContent = `by ${sellerName}`;
   sellerTagsContainer.appendChild(sellerEl);
 
-  // 3c) Tags in #9B7E47 (centered)
+  // 3c) Tags (centered)
   const tagsText = (Array.isArray(tags) && tags.length > 0) ? tags.join(', ') : 'No tags';
   const tagsEl = document.createElement('p');
   tagsEl.style.color = '#9B7E47';
-  tagsEl.style.textAlign = 'center';
+  tagsEl.className = 'text-center';
   tagsEl.textContent = tagsText;
   sellerTagsContainer.appendChild(tagsEl);
-
   card.appendChild(sellerTagsContainer);
 
   // 4) Description (left-aligned, text-xl)
@@ -178,23 +143,17 @@ function createSingleListingDOM(listing) {
   descEl.textContent = description || 'No description provided.';
   card.appendChild(descEl);
 
-  // 5) Info row for Created/Ends
+  // 5) Info row for Created/Ends (responsive)
   const infoRow = document.createElement('div');
-  infoRow.className = 'flex justify-between w-full text-xl text-gray-500 mb-4';
-
+  infoRow.className = 'flex justify-between w-full text-xl text-gray-500 my-4';
   const createdLocal = formatDateWithBreak(created);
   const endsLocal = formatDateWithBreak(endsAt);
-
   const createdSpan = document.createElement('span');
   createdSpan.innerHTML = `Created:<br>${createdLocal}`;
-  createdSpan.style.textAlign = 'left';
-  createdSpan.className = 'mb-16 mt-16';
-
+  createdSpan.className = 'text-left';
   const endsSpan = document.createElement('span');
   endsSpan.innerHTML = `Ends:<br>${endsLocal}`;
-  endsSpan.style.textAlign = 'left';
-  endsSpan.className = 'mb-16 mt-16';
-
+  endsSpan.className = 'text-left';
   infoRow.appendChild(createdSpan);
   infoRow.appendChild(endsSpan);
   card.appendChild(infoRow);
@@ -202,13 +161,8 @@ function createSingleListingDOM(listing) {
   // 6) Bidding area
   const token = localStorage.getItem('token');
   if (token) {
-    // Show the place bid input + button
     const bidContainer = document.createElement('div');
-    bidContainer.className = 'flex flex-col w-full mb-4';
-    bidContainer.style.fontSize = '1.25rem';
-    bidContainer.style.fontWeight = 'normal';
-    bidContainer.style.textAlign = 'center';
-
+    bidContainer.className = 'flex flex-col w-full mb-4 text-center text-xl';
     const inputEl = document.createElement('input');
     inputEl.type = 'number';
     inputEl.id = 'bid-amount';
@@ -216,24 +170,17 @@ function createSingleListingDOM(listing) {
     inputEl.placeholder = 'Your bid';
     inputEl.min = '1';
     inputEl.style.marginBottom = '6px';
-
     const btnEl = document.createElement('button');
     btnEl.id = 'place-bid-btn';
     btnEl.textContent = 'Place Bid';
-    btnEl.className = 'bg-[#9B7E47] hover:bg-[#866C3C] mb-32 text-white px-4 py-2 rounded-b transition relative z-10';
-
+    btnEl.className = 'bg-[#9B7E47] hover:bg-[#866C3C] text-white px-4 py-2 rounded-b transition relative z-10 mb-8';
     bidContainer.appendChild(inputEl);
     bidContainer.appendChild(btnEl);
     card.appendChild(bidContainer);
-
-    // The event for placing a bid is in handleBid
     btnEl.addEventListener('click', handleBid);
-
   } else {
-    // Show a note if not logged in
     const note = document.createElement('p');
-    note.className = 'text-xl text-gray-500 w-full';
-    note.style.textAlign = 'center';
+    note.className = 'text-xl text-gray-500 w-full text-center';
     note.textContent = 'Log in to place a bid.';
     card.appendChild(note);
   }
@@ -241,55 +188,38 @@ function createSingleListingDOM(listing) {
   // 7) Bid History
   const bidHistoryDiv = document.createElement('div');
   bidHistoryDiv.className = 'border-t pt-4 w-full';
-
   const bidTitle = document.createElement('h3');
-  bidTitle.className = 'text-xl font-bold mb-2';
-  bidTitle.style.textAlign = 'left';
+  bidTitle.className = 'text-xl font-bold mb-2 text-left';
   bidTitle.textContent = 'Bid History';
-
   bidHistoryDiv.appendChild(bidTitle);
-
   const ulEl = document.createElement('ul');
-  ulEl.style.textAlign = 'left';
-
+  ulEl.className = 'text-left';
   if (bids && bids.length > 0) {
-    // Sort bids descending by amount
     const sortedBids = [...bids].sort((a, b) => b.amount - a.amount);
-
     sortedBids.forEach(bid => {
       const liEl = document.createElement('li');
       liEl.className = 'flex w-full text-xl py-2 border-b last:border-0';
       liEl.style.fontWeight = 'normal';
-
       const bidderSpan = document.createElement('span');
-      bidderSpan.style.width = '33%';
-      bidderSpan.style.textAlign = 'left';
+      bidderSpan.className = 'w-1/3 text-left';
       bidderSpan.textContent = bid.bidder?.name || 'Unknown';
-
       const amountSpan = document.createElement('span');
-      amountSpan.style.width = '33%';
-      amountSpan.style.textAlign = 'center';
+      amountSpan.className = 'w-1/3 text-center';
       amountSpan.textContent = bid.amount;
-
       const dateSpan = document.createElement('span');
-      dateSpan.style.width = '33%';
-      dateSpan.style.textAlign = 'right';
+      dateSpan.className = 'w-1/3 text-right';
       dateSpan.textContent = formatDateNoBreak(bid.created);
-
       liEl.appendChild(bidderSpan);
       liEl.appendChild(amountSpan);
       liEl.appendChild(dateSpan);
-
       ulEl.appendChild(liEl);
     });
   } else {
     const noBidsLi = document.createElement('li');
-    noBidsLi.className = 'text-xl text-gray-500';
-    noBidsLi.style.textAlign = 'left';
+    noBidsLi.className = 'text-xl text-gray-500 text-left';
     noBidsLi.textContent = 'No bids yet.';
     ulEl.appendChild(noBidsLi);
   }
-
   bidHistoryDiv.appendChild(ulEl);
   card.appendChild(bidHistoryDiv);
 
@@ -322,9 +252,6 @@ function openImageModal(imageUrl) {
   });
 }
 
-/**
- * The handleBid function
- */
 async function handleBid() {
   try {
     const amountInput = document.getElementById('bid-amount');
@@ -335,15 +262,12 @@ async function handleBid() {
       return;
     }
 
-    console.log('Placing bid on listing:', listingId, 'with amount:', amount);
-    const updatedListing = await bidOnListing(listingId, amount);
-    console.log('Bid response:', updatedListing);
+    
 
     if (updatedListing) {
       alert('Bid placed successfully!');
-      container.innerHTML = '';
-      const newLayout = createSingleListingLayout(updatedListing);
-      container.appendChild(newLayout);
+      // Refresh the page to update the bid history, credits, etc.
+      window.location.reload();
     } else {
       alert('Bid placed, but no updated data returned.');
     }
@@ -353,5 +277,55 @@ async function handleBid() {
   }
 }
 
+
 // Kick off by loading the listing.
 loadListing();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('token');
+
+  // Desktop elements
+  const profileBtn = document.getElementById('profile-btn'); // SVG modal trigger
+  const profileDropdown = document.getElementById('profile-dropdown');
+  const desktopProfileLink = document.getElementById('desktop-profile-link');
+  
+  // Mobile elements
+  const mobileAuthBtn = document.getElementById('mobile-auth-btn');
+  const mobileProfileLink = document.getElementById('mobile-profile-link');
+
+  if (token) {
+    // Logged in:
+    // Desktop: Ensure the profile modal trigger (SVG) remains visible,
+    // and show the desktop profile link in the dropdown.
+    if (desktopProfileLink) desktopProfileLink.classList.remove('hidden');
+    
+    // Mobile: Set auth button text to "Log Out" and show the mobile profile link.
+    if (mobileAuthBtn) mobileAuthBtn.textContent = 'Log Out';
+    if (mobileProfileLink) mobileProfileLink.classList.remove('hidden');
+
+    // Attach logout behavior for mobile auth button.
+    if (mobileAuthBtn) {
+      mobileAuthBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/';
+      });
+    }
+    // Attach logout behavior for desktop dropdown's logout button.
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/';
+      });
+    }
+  } else {
+    // Not logged in:
+    if (desktopProfileLink) desktopProfileLink.classList.add('hidden');
+    if (mobileAuthBtn) mobileAuthBtn.textContent = 'Login';
+    if (mobileProfileLink) mobileProfileLink.classList.add('hidden');
+  }
+});

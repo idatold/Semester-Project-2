@@ -74,7 +74,7 @@ export function initProfileModal() {
 
       try {
         const data = await registerUser(username, email, password);
-        console.log('Registration successful:', data);
+      
         alert('Registration successful! Please log in.');
         slider.style.transform = 'translateX(0%)';
       } catch (error) {
@@ -95,7 +95,7 @@ export function initProfileModal() {
       try {
         // handleLogin stores token and user info in localStorage.
         await handleLogin({ email, password }, (user) => {
-          console.log('User set:', user);
+   
         });
         alert('Login successful!');
         window.location.href = '/profile/';
