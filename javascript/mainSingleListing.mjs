@@ -262,11 +262,14 @@ async function handleBid() {
       return;
     }
 
-    
+    console.log('Placing bid on listing:', listingId, 'with amount:', amount);
+    // Capture the response using a declared variable
+    const updatedListing = await bidOnListing(listingId, amount);
+    console.log('Bid response:', updatedListing);
 
     if (updatedListing) {
       alert('Bid placed successfully!');
-      // Refresh the page to update the bid history, credits, etc.
+      // Refresh the page to update bid history, credits, etc.
       window.location.reload();
     } else {
       alert('Bid placed, but no updated data returned.');
@@ -276,6 +279,7 @@ async function handleBid() {
     alert('Error placing bid. Check console for details.');
   }
 }
+
 
 
 // Kick off by loading the listing.
