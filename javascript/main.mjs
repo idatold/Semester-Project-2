@@ -1,5 +1,17 @@
 import './css/style.css'
 import { setupHamburgerMenu } from './navigation.mjs';
+import { showLoadingSpinner, hideLoadingSpinner } from './utils/loadingspinner.mjs';
+
+// Show the spinner overlay
+showLoadingSpinner();
+
+// Hide it after 2 seconds (2000 milliseconds)
+setTimeout(() => {
+  hideLoadingSpinner();
+}, 2000);
+
+
+
 
 setupHamburgerMenu({
   menuBtnSelector: '#menu-btn',
@@ -7,14 +19,17 @@ setupHamburgerMenu({
   mobileMenuSelector: '#mobile-menu',
 });
 
-
-
 import { initSearchBar } from './utils/searchBar.mjs';
 
 document.addEventListener('DOMContentLoaded', () => {
-  // other universal inits, e.g. hamburger toggler, etc.
-  initSearchBar(); // This will attach the event listener to .searchBar
+  initSearchBar();
 });
+
+
+
+
+
+
 
 
 

@@ -4,7 +4,7 @@
  * Sort by newest but show active listings first, then ended.
  */
 export function sortByNewest(auctions) {
-  console.log("Sorting by newest with active-first logic...");
+
 
   const now = new Date();
   return [...auctions].sort((a, b) => {

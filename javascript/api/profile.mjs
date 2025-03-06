@@ -1,12 +1,11 @@
-import api from './axios.mjs'; // Your custom Axios instance
-
+import api from './axios.mjs'; 
 // Fetch profile data for a given username.
 export async function getProfile(username) {
   try {
     const endpoint = `/auction/profiles/${username}`;
-    console.log("Fetching profile from endpoint:", endpoint);
+   
     const response = await api.get(endpoint);
-    console.log("Profile fetch response:", response);
+ 
     return response.data.data; // Expected shape: { name, credits, avatar, bio, banner, ... }
   } catch (error) {
     if (error.response) {
@@ -60,12 +59,7 @@ export async function updateProfile(username) {
   }
 }
 
-/**
- * Exported function to update the credits UI.
- * If the user is not logged in (no token), the credits containers are hidden.
- * Otherwise, it retrieves the username from localStorage, fetches the profile,
- * and updates every element with the class "profile-credits".
- */
+
 export async function updateCredits() {
   const creditsElements = document.querySelectorAll('.profile-credits');
   if (!creditsElements.length) return;
@@ -114,7 +108,7 @@ export async function updateProfileData(username, data) {
   try {
     const endpoint = `/auction/profiles/${username}`;
     const response = await api.put(endpoint, data);
-    console.log('Profile update response:', response);
+   
     return response.data;
   } catch (error) {
     console.error(

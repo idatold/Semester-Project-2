@@ -9,35 +9,37 @@
       content="BidHive is an auction house site where you can discover and bid on unique items."
     />
     <title>BidHive</title>
-
-    <!-- Main JS entry -->
     <script type="module" src="/javascript/mainAuctions.mjs"></script>
   </head>
-
   <body class="bg-[#F8F1E8] font-heading">
-    <!-- NAVBAR -->
+    <div id="loading-spinner-container"></div>
     <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
       <!-- DESKTOP TOP BAR (≥900px) -->
       <div class="hidden md2:flex h-44 items-center px-6 justify-between">
         <!-- Left: Logo -->
         <div class="flex-shrink-0">
-          <a href="/">
-            <img src="/assets/BidHiveLogo.svg" alt="BidHive logo" />
-          </a>
+          <a href="/"
+            ><img src="/assets/BidHiveLogo.svg" alt="BidHive logo"
+          /></a>
         </div>
-
-        <!-- Search bar -->
-        <div class="mx-auto">
+        <!-- Center: Updated Searchbar -->
+        <div class="relative mx-auto">
           <input
             type="text"
             placeholder="Search..."
-            class="searchBar px-4 py-2 border border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 focus:border-yellow-700"
+            class="searchBar w-full px-4 py-2 border border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 focus:border-yellow-700"
           />
+          <button
+            id="search-btn"
+            class="absolute inset-y-0 right-0 px-3 py-2 bg-yellow-700 text-white rounded-r-lg"
+            aria-label="Search"
+          >
+            🔍
+          </button>
         </div>
-
-        <!-- Right: Credits & Profile -->
+        <!-- Right: Credits, Profile/Login, and Dropdown -->
         <div class="flex items-center space-x-4 text-yellow-700 font-semibold">
-          <!-- Credits -->
+          <!-- Credits Element -->
           <div class="flex items-center space-x-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -46,17 +48,15 @@
               viewBox="0 0 34 34"
               fill="none"
             >
-              <!-- Credits SVG paths -->
               <path
                 d="M0 26.9145V29.75C0 32.0941 5.71094 34 12.75 34C19.7891 34 25.5 32.0941 25.5 29.75V26.9145C22.7574 28.8469 17.7437 29.75 12.75 29.75C7.75625 29.75 2.74258 28.8469 0 26.9145ZM21.25 8.5C28.2891 8.5 34 6.59414 34 4.25C34 1.90586 28.2891 0 21.25 0C14.2109 0 8.5 1.90586 8.5 4.25C8.5 6.59414 14.2109 8.5 21.25 8.5ZM0 19.9484V23.375C0 25.7191 5.71094 27.625 12.75 27.625C19.7891 27.625 25.5 25.7191 25.5 23.375V19.9484C22.7574 22.2062 17.7371 23.375 12.75 23.375C7.76289 23.375 2.74258 22.2062 0 19.9484ZM27.625 20.6789C31.4301 19.9418 34 18.5738 34 17V14.1645C32.4594 15.2535 30.1949 15.9973 27.625 16.4555V20.6789ZM12.75 10.625C5.71094 10.625 0 13.0023 0 15.9375C0 18.8727 5.71094 21.25 12.75 21.25C19.7891 21.25 25.5 18.8727 25.5 15.9375C25.5 13.0023 19.7891 10.625 12.75 10.625ZM27.3129 14.3637C31.2973 13.6465 34 12.2387 34 10.625V7.78945C31.6426 9.45625 27.5918 10.3527 23.3285 10.5652C25.2875 11.5148 26.7285 12.7898 27.3129 14.3637Z"
                 fill="#956B1B"
-              />
+              ></path>
             </svg>
-            <!-- Credits -->
             <div class="profile-credits text-yellow-700"></div>
           </div>
 
-          <!-- Profile Button -->
+          <!-- Profile Button (shown when not logged in) -->
           <button
             id="profile-btn"
             class="p-2 px-10 text-yellow-700"
@@ -65,8 +65,7 @@
           >
             <span id="profile-btn-text">Login</span>
           </button>
-
-          <!-- Profile Dropdown (visible when logged in) -->
+          <!-- Profile Dropdown (for logged in users) -->
           <div
             id="profile-dropdown"
             class="hidden absolute right-0 mt-10 w-48 bg-white border border-gray-200 rounded-md shadow-lg"
@@ -88,29 +87,31 @@
 
       <!-- MOBILE NAV BAR (<900px) -->
       <div class="md2:hidden w-full px-6 py-4 flex flex-col items-center">
-        <!-- 1) Logo on top (centered) -->
-        <a href="/">
-          <img src="/assets/BidHiveLogo.svg" alt="BidHive logo" />
-        </a>
-
-        <!-- 2) Row with search bar in the middle & hamburger on the right -->
+        <!-- Top: Logo -->
+        <a href="/"><img src="/assets/BidHiveLogo.svg" alt="BidHive logo" /></a>
+        <!-- Middle: Grid with Updated Searchbar and Hamburger -->
         <div
           class="grid w-full items-center"
           style="grid-template-columns: 1fr auto 1fr"
         >
-          <!-- Left spacer (1fr) -->
+          <!-- Empty left cell -->
           <div></div>
-
-          <!-- Center column: Search bar -->
-          <div>
+          <!-- Center: Updated Searchbar -->
+          <div class="relative mx-auto">
             <input
               type="text"
               placeholder="Search..."
-              class="px-4 py-2 border border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 focus:border-yellow-700 w-full max-w-[calc(100vw-100px)] sm:max-w-md mx-auto"
+              class="searchBar w-full px-4 py-2 border border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 focus:border-yellow-700"
             />
+            <button
+              id="search-btn-mobile"
+              class="absolute inset-y-0 right-0 px-3 py-2 bg-yellow-700 text-white rounded-r-lg"
+              aria-label="Search"
+            >
+              🔍
+            </button>
           </div>
-
-          <!-- Right column: Hamburger -->
+          <!-- Right: Hamburger Menu -->
           <div class="flex justify-end">
             <button
               id="menu-btn"
@@ -129,7 +130,7 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   d="M4 6h16M4 12h16M4 18h16"
-                />
+                ></path>
               </svg>
             </button>
           </div>
@@ -177,56 +178,55 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               d="M6 18L18 6M6 6l12 12"
-            />
+            ></path>
           </svg>
         </button>
-
-        <!-- Mobile Credits & Profile -->
-        <div class="flex items-center space-x-6 pb-8">
-          <!-- Credits -->
+        <!-- Mobile Credits, Profile, and Auth -->
+        <div class="flex flex-col items-center space-y-4 pb-8">
           <div class="flex items-center space-x-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="34"
-              height="34"
-              viewBox="0 0 34 34"
-              fill="none"
+            <!-- Mobile Profile Link (hidden by default; will show when logged in) -->
+            <a
+              href="/profile/index.html"
+              id="mobile-profile-link"
+              class="hidden p-2 px-10 text-yellow-700 font-semibold hover:underline"
             >
-              <!-- Credits SVG paths -->
-              <path
-                d="M0 26.9145V29.75C0 32.0941 5.71094 34 12.75 34C19.7891 34 25.5 32.0941 25.5 29.75V26.9145C22.7574 28.8469 17.7437 29.75 12.75 29.75C7.75625 29.75 2.74258 28.8469 0 26.9145ZM21.25 8.5C28.2891 8.5 34 6.59414 34 4.25C34 1.90586 28.2891 0 21.25 0C14.2109 0 8.5 1.90586 8.5 4.25C8.5 6.59414 14.2109 8.5 21.25 8.5ZM0 19.9484V23.375C0 25.7191 5.71094 27.625 12.75 27.625C19.7891 27.625 25.5 25.7191 25.5 23.375V19.9484C22.7574 22.2062 17.7371 23.375 12.75 23.375C7.76289 23.375 2.74258 22.2062 0 19.9484ZM27.625 20.6789C31.4301 19.9418 34 18.5738 34 17V14.1645C32.4594 15.2535 30.1949 15.9973 27.625 16.4555V20.6789ZM12.75 10.625C5.71094 10.625 0 13.0023 0 15.9375C0 18.8727 5.71094 21.25 12.75 21.25C19.7891 21.25 25.5 18.8727 25.5 15.9375C25.5 13.0023 19.7891 10.625 12.75 10.625ZM27.3129 14.3637C31.2973 13.6465 34 12.2387 34 10.625V7.78945C31.6426 9.45625 27.5918 10.3527 23.3285 10.5652C25.2875 11.5148 26.7285 12.7898 27.3129 14.3637Z"
-                fill="#956B1B"
-              />
-            </svg>
-            <span class="text-yellow-700 font-semibold">1000</span>
+              Profile
+            </a>
+            <!-- Credits Element -->
+            <div class="flex items-center space-x-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="34"
+                height="34"
+                viewBox="0 0 34 34"
+                fill="none"
+              >
+                <path
+                  d="M0 26.9145V29.75C0 32.0941 5.71094 34 12.75 34C19.7891 34 25.5 32.0941 25.5 29.75V26.9145C22.7574 28.8469 17.7437 29.75 12.75 29.75C7.75625 29.75 2.74258 28.8469 0 26.9145ZM21.25 8.5C28.2891 8.5 34 6.59414 34 4.25C34 1.90586 28.2891 0 21.25 0C14.2109 0 8.5 1.90586 8.5 4.25C8.5 6.59414 14.2109 8.5 21.25 8.5ZM0 19.9484V23.375C0 25.7191 5.71094 27.625 12.75 27.625C19.7891 27.625 25.5 25.7191 25.5 23.375V19.9484C22.7574 22.2062 17.7371 23.375 12.75 23.375C7.76289 23.375 2.74258 22.2062 0 19.9484ZM27.625 20.6789C31.4301 19.9418 34 18.5738 34 17V14.1645C32.4594 15.2535 30.1949 15.9973 27.625 16.4555V20.6789ZM12.75 10.625C5.71094 10.625 0 13.0023 0 15.9375C0 18.8727 5.71094 21.25 12.75 21.25C19.7891 21.25 25.5 18.8727 25.5 15.9375C25.5 13.0023 19.7891 10.625 12.75 10.625ZM27.3129 14.3637C31.2973 13.6465 34 12.2387 34 10.625V7.78945C31.6426 9.45625 27.5918 10.3527 23.3285 10.5652C25.2875 11.5148 26.7285 12.7898 27.3129 14.3637Z"
+                  fill="#956B1B"
+                ></path>
+              </svg>
+              <span class="profile-credits text-yellow-700 font-semibold"
+                >1000</span
+              >
+            </div>
           </div>
-
-          <!-- Profile (for mobile, this remains a simple link) -->
-          <a href="#" class="p-2 px-10">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="34"
-              height="34"
-              viewBox="0 0 34 34"
-              fill="none"
+          <div class="flex space-x-4">
+            <a
+              href="/auctions/index.html"
+              class="p-2 px-6 text-yellow-700 font-semibold"
             >
-              <!-- Profile portrait SVG paths -->
-              <path
-                d="M17.1905 19.4195C17.1588 19.4195 17.1114 19.4195 17.0798 19.4195C17.0323 19.4195 16.9691 19.4195 16.9216 19.4195C13.3318 19.3088 10.6434 16.5098 10.6434 13.0623C10.6434 9.5516 13.5058 6.68927 17.0165 6.68927C20.5272 6.68927 23.3895 9.5516 23.3895 13.0623C23.3737 16.5256 20.6695 19.3088 17.2379 19.4195C17.2063 19.4195 17.2063 19.4195 17.1905 19.4195ZM17.0007 9.04555C14.7867 9.04555 12.9997 10.8483 12.9997 13.0465C12.9997 15.213 14.6919 16.9684 16.8426 17.0474C16.89 17.0316 17.0481 17.0316 17.2063 17.0474C19.3253 16.9367 20.9858 15.1972 21.0016 13.0465C21.0016 10.8483 19.2146 9.04555 17.0007 9.04555Z"
-                fill="#956B1B"
-              />
-              <path
-                d="M17.0014 34.0001C12.7474 34.0001 8.68323 32.4188 5.53626 29.5406C5.25161 29.2876 5.12509 28.9081 5.15672 28.5443C5.3623 26.6625 6.53254 24.9071 8.47765 23.6104C13.1902 20.4792 20.8283 20.4792 25.5251 23.6104C27.4702 24.9229 28.6404 26.6625 28.846 28.5443C28.8935 28.9239 28.7511 29.2876 28.4665 29.5406C25.3195 32.4188 21.2553 34.0001 17.0014 34.0001ZM7.63951 28.2281C10.2646 30.4262 13.5697 31.6281 17.0014 31.6281C20.433 31.6281 23.7381 30.4262 26.3632 28.2281C26.0786 27.2634 25.3195 26.3304 24.1967 25.5713C20.3065 22.9778 13.7121 22.9778 9.79021 25.5713C8.66742 26.3304 7.92416 27.2634 7.63951 28.2281Z"
-                fill="#956B1B"
-              />
-              <path
-                d="M17 34C7.62233 34 0 26.3777 0 17C0 7.62233 7.62233 0 17 0C26.3777 0 34 7.62233 34 17C34 26.3777 26.3777 34 17 34ZM17 2.37209C8.93488 2.37209 2.37209 8.93488 2.37209 17C2.37209 25.0651 8.93488 31.6279 17 31.6279C25.0651 31.6279 31.6279 25.0651 31.6279 17C31.6279 8.93488 25.0651 2.37209 17 2.37209Z"
-                fill="#956B1B"
-              />
-            </svg>
-          </a>
+              Back to Auctions
+            </a>
+            <a
+              href="#"
+              id="mobile-auth-btn"
+              class="p-2 px-6 text-yellow-700 font-semibold"
+            >
+              Login
+            </a>
+          </div>
         </div>
-
         <!-- Mobile Categories -->
         <a href="#" data-category="Art" class="hover:underline">Art</a>
         <a href="#" data-category="Books" class="hover:underline">Books</a>
@@ -242,20 +242,16 @@
         <a href="#" data-category="Games" class="hover:underline">Games</a>
       </div>
 
-      <!-- MODAL -->
+      <!-- MODAL (shared) -->
       <div
         id="profile-modal"
         class="fixed inset-0 z-[999] hidden bg-black/50 flex items-center justify-center"
         aria-hidden="true"
       >
-        <!-- Backdrop (to close modal on click) -->
         <div id="backdrop" class="absolute inset-0"></div>
-
-        <!-- The "Slider Container" (same size for both states) -->
         <div
           class="relative w-[90%] max-w-5xl h-auto bg-white shadow-lg rounded-lg overflow-hidden"
         >
-          <!-- Close button -->
           <button
             id="close-modal"
             class="absolute top-4 right-4 text-gray-600 hover:text-black focus:outline-none"
@@ -263,19 +259,16 @@
           >
             ✕
           </button>
-
-          <!-- The SLIDER: 200% width for 2 slides side by side -->
           <div
             id="slider"
             class="flex w-[200%] transition-transform duration-300 ease-in-out"
             style="transform: translateX(0%)"
           >
-            <!-- SLIDE 1: LOGIN (brand on right, login form on left) -->
+            <!-- SLIDE 1: LOGIN -->
             <div class="w-1/2 flex">
-              <!-- Left side: Login Form -->
               <div class="w-1/2 flex flex-col justify-center p-8">
                 <h2 class="text-3xl font-bold mb-6">Login</h2>
-                <form id="login-form">
+                <form id="login-form" name="login-form">
                   <div class="mb-4">
                     <label class="block mb-1 font-medium" for="login-email"
                       >Email</label
@@ -316,7 +309,6 @@
                   </button>
                 </p>
               </div>
-              <!-- Right side: Brand -->
               <div
                 class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center"
               >
@@ -329,10 +321,8 @@
                 </div>
               </div>
             </div>
-
-            <!-- SLIDE 2: REGISTER (brand on left, register form on right) -->
+            <!-- SLIDE 2: REGISTER -->
             <div class="w-1/2 flex">
-              <!-- Left side: Brand -->
               <div
                 class="w-1/2 bg-[#C0AC87] text-white flex items-center justify-center"
               >
@@ -344,10 +334,9 @@
                   />
                 </div>
               </div>
-              <!-- Right side: Register Form -->
               <div class="w-1/2 flex flex-col justify-center p-8">
                 <h2 class="text-3xl font-bold mb-6">Register</h2>
-                <form id="register-form">
+                <form id="register-form" name="register-form">
                   <div class="mb-4">
                     <label
                       class="block mb-1 font-medium"
@@ -408,20 +397,16 @@
         </div>
       </div>
     </nav>
-    <!-- END NAVBAR -->
 
     <main class="pt-44 px-6">
-      
-      
-
-      <section class="w-full flex justify-center mt-32 ">
+      <section class="w-full flex justify-center mt-32">
         <div class="max-w-[1120px] w-full px-4">
           <h2 class="text-3xl font-bold mb-32 text-center">
-            <a href="/auctions/index.html" class="hover:underline">All Listings</a>
+            <a href="/auctions/index.html" class="hover:underline"
+              >All Listings</a
+            >
           </h2>
-      
           <section>
-            <!-- Row with dropdown + new listing button -->
             <div class="flex items-center justify-center space-x-4 mb-16">
               <label for="sortDropdown" class="sr-only">Sort by:</label>
               <select
@@ -435,25 +420,17 @@
                 <option value="lowestPrice">Lowest Price</option>
                 <option value="endingSoonest">Ending Soonest</option>
               </select>
-          
-              <!-- New Listing button (hidden by default) -->
               <button
                 id="new-listing-btn"
-                class="hidden border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                class="hidden border border-gray-300 bg-white rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
               >
                 + New Listing
               </button>
             </div>
-          
-            <!-- Listings container -->
             <div
               id="listings-container"
-              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center mb-12"
-            >
-              <p class="text-gray-500 w-full text-center">Loading auctions...</p>
-            </div>
-          
-            <!-- Load More button (centered) -->
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto justify-items-center"
+            ></div>
             <div class="flex justify-center mt-4">
               <button
                 id="load-more-btn"
@@ -463,204 +440,197 @@
               </button>
             </div>
           </section>
-          
-          
-      <!-- CREATE LISTING MODAL (hidden by default) -->
-      <div
-        id="create-listing-modal"
-        class="fixed inset-0 z-[999] hidden bg-black/50 flex items-center justify-center"
-        aria-hidden="true"
-      >
-        <!-- Backdrop -->
-        <div id="createListingBackdrop" class="absolute inset-0"></div>
-      
-        <!-- Modal Content -->
-        <div class="relative w-[90%] max-w-lg bg-white shadow-lg rounded-lg overflow-hidden p-6">
-          <!-- Close button -->
-          <button
-            id="close-create-listing"
-            class="absolute top-4 right-4 text-gray-600 hover:text-black focus:outline-none"
-            aria-label="Close Modal"
+          <div
+            id="create-listing-modal"
+            class="fixed inset-0 z-[999] hidden bg-black/50 flex items-center justify-center"
+            aria-hidden="true"
           >
-            ✕
-          </button>
-      
-          <h2 class="text-2xl font-bold mb-4">Create New Listing</h2>
-          <form id="create-listing-form" class="space-y-4">
-            <div>
-              <label for="listing-title" class="block font-semibold mb-1"
-                >Title <span class="text-red-500">*</span></label
-              >
-              <input
-                type="text"
-                id="listing-title"
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-                required
-              />
-            </div>
-      
-            <div>
-              <label for="listing-description" class="block font-semibold mb-1"
-                >Description</label
-              >
-              <textarea
-                id="listing-description"
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-                rows="3"
-              ></textarea>
-            </div>
-      
-            <div>
-              <label for="listing-tags" class="block font-semibold mb-1"
-                >Tags (comma separated)</label
-              >
-              <input
-                type="text"
-                id="listing-tags"
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-                placeholder="e.g. art, painting"
-              />
-            </div>
-      
-            <div>
-              <label for="listing-media" class="block font-semibold mb-1"
-                >Media URL</label
-              >
-              <input
-                type="url"
-                id="listing-media"
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-                placeholder="https://example.com/image.jpg"
-              />
-              <p class="text-sm text-gray-500 mt-1">
-                Must be a publicly accessible image URL.
-              </p>
-            </div>
-      
-            <div>
-              <label for="listing-endsAt" class="block font-semibold mb-1"
-                >End Date/Time <span class="text-red-500">*</span></label
-              >
-              <input
-                type="datetime-local"
-                id="listing-endsAt"
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-                required
-              />
-            </div>
-      
-            <button
-              type="submit"
-              class="bg-[#956B1B] text-white px-4 py-2 rounded hover:bg-[#7a5616] transition-colors"
+            <div id="createListingBackdrop" class="absolute inset-0"></div>
+            <div
+              class="relative w-[90%] max-w-lg bg-white shadow-lg rounded-lg overflow-hidden p-6"
             >
-              Create
-            </button>
-          </form>
+              <button
+                id="close-create-listing"
+                class="absolute top-4 right-4 text-gray-600 hover:text-black focus:outline-none"
+                aria-label="Close Modal"
+              >
+                ✕
+              </button>
+              <h2 class="text-2xl font-bold mb-4">Create New Listing</h2>
+              <form
+                id="create-listing-form"
+                class="space-y-4"
+                name="create-listing-form"
+              >
+                <div>
+                  <label for="listing-title" class="block font-semibold mb-1"
+                    >Title <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="listing-title"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    required=""
+                  />
+                </div>
+                <div>
+                  <label
+                    for="listing-description"
+                    class="block font-semibold mb-1"
+                    >Description</label
+                  >
+                  <textarea
+                    id="listing-description"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    rows="3"
+                  ></textarea>
+                </div>
+                <div>
+                  <label for="listing-tags" class="block font-semibold mb-1"
+                    >Tags (comma separated)</label
+                  >
+                  <input
+                    type="text"
+                    id="listing-tags"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    placeholder="e.g. art, painting"
+                  />
+                </div>
+                <div>
+                  <label for="listing-media" class="block font-semibold mb-1"
+                    >Media URL</label
+                  >
+                  <input
+                    type="url"
+                    id="listing-media"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                  <p class="text-sm text-gray-500 mt-1">
+                    Must be a publicly accessible image URL.
+                  </p>
+                </div>
+                <div>
+                  <label for="listing-endsAt" class="block font-semibold mb-1"
+                    >End Date/Time <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="datetime-local"
+                    id="listing-endsAt"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    required=""
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="bg-[#956B1B] text-white px-4 py-2 rounded hover:bg-[#7a5616] transition-colors"
+                >
+                  Create
+                </button>
+              </form>
+            </div>
+          </div>
+          <div
+            id="update-listing-modal"
+            class="fixed inset-0 z-[999] hidden bg-black/50 flex items-center justify-center"
+            aria-hidden="true"
+          >
+            <div id="updateListingBackdrop" class="absolute inset-0"></div>
+            <div
+              class="relative w-[90%] max-w-lg bg-white shadow-lg rounded-lg overflow-hidden p-6"
+            >
+              <button
+                id="close-update-listing"
+                class="absolute top-4 right-4 text-gray-600 hover:text-black focus:outline-none"
+                aria-label="Close Modal"
+              >
+                ✕
+              </button>
+              <h2 class="text-2xl font-bold mb-4">Update Listing</h2>
+              <form
+                id="update-listing-form"
+                class="space-y-4"
+                name="update-listing-form"
+              >
+                <div>
+                  <label
+                    for="update-listing-title"
+                    class="block font-semibold mb-1"
+                    >Title <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="update-listing-title"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    required=""
+                  />
+                </div>
+                <div>
+                  <label
+                    for="update-listing-description"
+                    class="block font-semibold mb-1"
+                    >Description</label
+                  >
+                  <textarea
+                    id="update-listing-description"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    rows="3"
+                  ></textarea>
+                </div>
+                <div>
+                  <label
+                    for="update-listing-tags"
+                    class="block font-semibold mb-1"
+                    >Tags (comma separated)</label
+                  >
+                  <input
+                    type="text"
+                    id="update-listing-tags"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    placeholder="e.g. art, painting"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="update-listing-media"
+                    class="block font-semibold mb-1"
+                    >Media URL</label
+                  >
+                  <input
+                    type="url"
+                    id="update-listing-media"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                  <p class="text-sm text-gray-500 mt-1">
+                    Must be a publicly accessible image URL.
+                  </p>
+                </div>
+                <div>
+                  <label
+                    for="update-listing-endsAt"
+                    class="block font-semibold mb-1"
+                    >End Date/Time <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="datetime-local"
+                    id="update-listing-endsAt"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
+                    required=""
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="bg-[#956B1B] text-white px-4 py-2 rounded hover:bg-[#7a5616] transition-colors"
+                >
+                  Update
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
-      </div>
-      
-    
-<!-- UPDATE LISTING MODAL (hidden by default) -->
-<div
-  id="update-listing-modal"
-  class="fixed inset-0 z-[999] hidden bg-black/50 flex items-center justify-center"
-  aria-hidden="true"
->
-  <!-- Backdrop -->
-  <div id="updateListingBackdrop" class="absolute inset-0"></div>
-
-  <!-- Modal Content -->
-  <div class="relative w-[90%] max-w-lg bg-white shadow-lg rounded-lg overflow-hidden p-6">
-    <!-- Close button -->
-    <button
-      id="close-update-listing"
-      class="absolute top-4 right-4 text-gray-600 hover:text-black focus:outline-none"
-      aria-label="Close Modal"
-    >
-      ✕
-    </button>
-
-    <h2 class="text-2xl font-bold mb-4">Update Listing</h2>
-
-    <form id="update-listing-form" class="space-y-4">
-      <div>
-        <label for="update-listing-title" class="block font-semibold mb-1"
-          >Title <span class="text-red-500">*</span></label
-        >
-        <input
-          type="text"
-          id="update-listing-title"
-          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-          required
-        />
-      </div>
-
-      <div>
-        <label for="update-listing-description" class="block font-semibold mb-1"
-          >Description</label
-        >
-        <textarea
-          id="update-listing-description"
-          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-          rows="3"
-        ></textarea>
-      </div>
-
-      <div>
-        <label for="update-listing-tags" class="block font-semibold mb-1"
-          >Tags (comma separated)</label
-        >
-        <input
-          type="text"
-          id="update-listing-tags"
-          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-          placeholder="e.g. art, painting"
-        />
-      </div>
-
-      <div>
-        <label for="update-listing-media" class="block font-semibold mb-1"
-          >Media URL</label
-        >
-        <input
-          type="url"
-          id="update-listing-media"
-          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-          placeholder="https://example.com/image.jpg"
-        />
-        <p class="text-sm text-gray-500 mt-1">
-          Must be a publicly accessible image URL.
-        </p>
-      </div>
-
-      <div>
-        <label for="update-listing-endsAt" class="block font-semibold mb-1"
-          >End Date/Time <span class="text-red-500">*</span></label
-        >
-        <input
-          type="datetime-local"
-          id="update-listing-endsAt"
-          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-yellow-700"
-          required
-        />
-      </div>
-
-      <button
-        type="submit"
-        class="bg-[#956B1B] text-white px-4 py-2 rounded hover:bg-[#7a5616] transition-colors"
-      >
-        Update
-      </button>
-    </form>
-  </div>
-</div>
-
-      
-      
-      
+      </section>
     </main>
-
-    <!-- FOOTER -->
     <footer class="bg-[#d1b38c] text-white text-center py-8">
       <div class="flex flex-col items-center">
         <img
@@ -670,10 +640,8 @@
         />
         <section aria-label="Helpful Links" class="flex space-x-8 mb-6">
           <a href="/" class="hover:underline">Home Page</a>
-          <a href="#" class="hover:underline">Become a member</a>
-          <a href="#" class="hover:underline">Privacy Policy</a>
         </section>
-        <p class="text-sm">&copy; BidHive all rights reserved 2025</p>
+        <p class="text-sm">© BidHive all rights reserved 2025</p>
       </div>
     </footer>
   </body>
