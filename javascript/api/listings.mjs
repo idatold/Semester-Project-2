@@ -96,12 +96,11 @@ export async function getSingleListing(id, { seller, bids } = {}) {
  */
 export async function bidOnListing(listingId, amount) {
   try {
-    const response = await api.post(`/auction/listings/${listingId}/bids`, {
-      amount,
-    });
+    const response = await api.post(`/auction/listings/${listingId}/bids`, { amount });
     return response.data.data;
   } catch (error) {
     console.error(`Failed to bid on listing ${listingId}:`, error);
     throw error;
   }
 }
+

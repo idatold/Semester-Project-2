@@ -256,16 +256,18 @@ async function handleBid() {
   try {
     const amountInput = document.getElementById('bid-amount');
     const amount = Number(amountInput.value);
+
     if (!amount || amount < 1) {
       alert('Please enter a valid bid amount.');
       return;
     }
-    console.log('Placing bid on listing:', listingId, 'with amount:', amount);
-    // Declare and assign the updated listing response
-    const updatedListing = await bidOnListing(listingId, amount);
-    console.log('Bid response:', updatedListing);
 
-    if (updatedListing) {
+    console.log('Placing bid on listing:', listingId, 'with amount:', amount);
+    // Use a new variable name to avoid conflicts
+    const bidResponse = await bidOnListing(listingId, amount);
+    console.log('Bid response:', bidResponse);
+
+    if (bidResponse) {
       alert('Bid placed successfully!');
       // Refresh the page to update bid history, credits, etc.
       window.location.reload();
@@ -277,6 +279,7 @@ async function handleBid() {
     alert('Error placing bid. Check console for details.');
   }
 }
+
 
 
 
