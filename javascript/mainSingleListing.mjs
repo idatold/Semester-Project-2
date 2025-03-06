@@ -9,8 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initProfileModal();
 });
 
-
-
 // Update credits on page load.
 updateCredits();
 
@@ -32,36 +30,28 @@ async function loadListing() {
 
   try {
     container.innerHTML = '<p>Loading listing...</p>';
-
     const listing = await getSingleListing(listingId, { seller: true, bids: true });
-   
-
     if (!listing) {
       container.innerHTML = '<p>No listing found or an error occurred.</p>';
       return;
     }
-
     // Clear out "Loading..." text
     container.innerHTML = '';
-
     // Build the DOM-based layout
     const layoutEl = createSingleListingLayout(listing);
     container.appendChild(layoutEl);
-
   } catch (error) {
     console.error('Failed to load single listing:', error);
     container.innerHTML = '<p>Could not load listing.</p>';
   }
 }
 
-
 function createSingleListingLayout(listing) {
   // Outer container for the back link + card
   const outerContainer = document.createElement('div');
-  // Use flex-col, center items, and add responsive padding.
   outerContainer.className = 'flex flex-col items-center px-4';
-
-  // Back link row (centered, responsive)
+  
+  // Back link row
   const backLinkRow = document.createElement('div');
   backLinkRow.className = 'w-full max-w-4xl mb-6 text-center';
   const backLink = document.createElement('a');
@@ -70,21 +60,20 @@ function createSingleListingLayout(listing) {
   backLink.textContent = '← Back to all auctions';
   backLinkRow.appendChild(backLink);
   outerContainer.appendChild(backLinkRow);
-
+  
   // The listing card
   const cardEl = createSingleListingDOM(listing);
   outerContainer.appendChild(cardEl);
-
+  
   return outerContainer;
 }
 
 function createSingleListingDOM(listing) {
   const { title, description, media, created, endsAt, bids, seller, tags } = listing;
-
   const card = document.createElement('div');
   card.className = 'bg-white shadow-md rounded p-6 flex flex-col items-center w-full max-w-[540px] mx-auto font-[Beiruti]';
-
-  // 1) Image container (500×333) made responsive
+  
+  // 1) Image container (responsive)
   const imageContainer = document.createElement('div');
   imageContainer.className = 'mb-4 w-full max-w-[500px] flex items-center justify-center';
   imageContainer.style.aspectRatio = '500 / 333';
@@ -96,19 +85,18 @@ function createSingleListingDOM(listing) {
   imageEl.addEventListener('click', () => openImageModal(imageUrl));
   imageContainer.appendChild(imageEl);
   card.appendChild(imageContainer);
-
+  
   // 2) Title
   const titleEl = document.createElement('h2');
   titleEl.textContent = title || 'Untitled';
   titleEl.className = 'text-2xl font-bold mb-6';
   titleEl.style.fontFamily = 'The seasons, sans-serif';
   card.appendChild(titleEl);
-
-  // 3) Seller + Avatar + Tags container (centered)
+  
+  // 3) Seller + Avatar + Tags container
   const sellerTagsContainer = document.createElement('div');
   sellerTagsContainer.className = 'flex flex-col items-center mb-6 w-full';
-
-  // 3a) Hex-shaped avatar (original inline style)
+  // 3a) Hex-shaped avatar (clickable to profile page)
   const avatarUrl = seller?.avatar?.url || 'https://via.placeholder.com/50';
   const avatarEl = document.createElement('img');
   avatarEl.src = avatarUrl;
@@ -118,16 +106,23 @@ function createSingleListingDOM(listing) {
   avatarEl.style.objectFit = 'cover';
   avatarEl.style.clipPath = 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)';
   avatarEl.style.marginBottom = '8px';
+  // Make avatar clickable to go to the seller's profile page
+  avatarEl.style.cursor = 'pointer';
+  avatarEl.addEventListener('click', () => {
+    // Assuming the seller object has an id or username to form a URL:
+    const sellerId = seller?.id || '';
+    window.location.href = `/profile/index.html?id=${sellerId}`;
+  });
   sellerTagsContainer.appendChild(avatarEl);
-
-  // 3b) Seller name (centered)
+  
+  // 3b) Seller name
   const sellerName = seller?.name || 'Unknown Seller';
   const sellerEl = document.createElement('p');
   sellerEl.className = 'text-xl text-gray-600 mb-1 text-center';
   sellerEl.textContent = `by ${sellerName}`;
   sellerTagsContainer.appendChild(sellerEl);
-
-  // 3c) Tags (centered)
+  
+  // 3c) Tags
   const tagsText = (Array.isArray(tags) && tags.length > 0) ? tags.join(', ') : 'No tags';
   const tagsEl = document.createElement('p');
   tagsEl.style.color = '#9B7E47';
@@ -135,15 +130,15 @@ function createSingleListingDOM(listing) {
   tagsEl.textContent = tagsText;
   sellerTagsContainer.appendChild(tagsEl);
   card.appendChild(sellerTagsContainer);
-
-  // 4) Description (left-aligned, text-xl)
+  
+  // 4) Description
   const descEl = document.createElement('p');
   descEl.className = 'text-gray-700 text-xl mt-8 w-full';
   descEl.style.textAlign = 'left';
   descEl.textContent = description || 'No description provided.';
   card.appendChild(descEl);
-
-  // 5) Info row for Created/Ends (responsive)
+  
+  // 5) Info row for Created/Ends
   const infoRow = document.createElement('div');
   infoRow.className = 'flex justify-between w-full text-xl text-gray-500 my-4';
   const createdLocal = formatDateWithBreak(created);
@@ -157,7 +152,7 @@ function createSingleListingDOM(listing) {
   infoRow.appendChild(createdSpan);
   infoRow.appendChild(endsSpan);
   card.appendChild(infoRow);
-
+  
   // 6) Bidding area
   const token = localStorage.getItem('token');
   if (token) {
@@ -184,7 +179,7 @@ function createSingleListingDOM(listing) {
     note.textContent = 'Log in to place a bid.';
     card.appendChild(note);
   }
-
+  
   // 7) Bid History
   const bidHistoryDiv = document.createElement('div');
   bidHistoryDiv.className = 'border-t pt-4 w-full';
@@ -222,7 +217,7 @@ function createSingleListingDOM(listing) {
   }
   bidHistoryDiv.appendChild(ulEl);
   card.appendChild(bidHistoryDiv);
-
+  
   return card;
 }
 
@@ -232,21 +227,17 @@ function createSingleListingDOM(listing) {
 function openImageModal(imageUrl) {
   const overlay = document.createElement('div');
   overlay.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
-
   const bigImage = document.createElement('img');
   bigImage.src = imageUrl;
   bigImage.className = 'rounded shadow-lg cursor-pointer';
   bigImage.style.maxWidth = '80vw';
   bigImage.style.maxHeight = '80vh';
   bigImage.style.objectFit = 'contain';
-
   overlay.appendChild(bigImage);
   document.body.appendChild(overlay);
-
   overlay.addEventListener('click', () => {
     document.body.removeChild(overlay);
   });
-
   bigImage.addEventListener('click', (e) => {
     e.stopPropagation();
   });
@@ -256,17 +247,15 @@ async function handleBid() {
   try {
     const amountInput = document.getElementById('bid-amount');
     const amount = Number(amountInput.value);
-
     if (!amount || amount < 1) {
       alert('Please enter a valid bid amount.');
       return;
     }
-
-    
-
-    if (updatedListing) {
+    console.log('Placing bid on listing:', listingId, 'with amount:', amount);
+    const bidResponse = await bidOnListing(listingId, amount);
+    console.log('Bid response:', bidResponse);
+    if (bidResponse) {
       alert('Bid placed successfully!');
-      // Refresh the page to update the bid history, credits, etc.
       window.location.reload();
     } else {
       alert('Bid placed, but no updated data returned.');
@@ -277,13 +266,12 @@ async function handleBid() {
   }
 }
 
-
 // Kick off by loading the listing.
 loadListing();
 
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
-
+  
   // Desktop elements
   const profileBtn = document.getElementById('profile-btn'); // SVG modal trigger
   const profileDropdown = document.getElementById('profile-dropdown');
@@ -292,18 +280,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Mobile elements
   const mobileAuthBtn = document.getElementById('mobile-auth-btn');
   const mobileProfileLink = document.getElementById('mobile-profile-link');
-
+  
   if (token) {
-    // Logged in:
-    // Desktop: Ensure the profile modal trigger (SVG) remains visible,
-    // and show the desktop profile link in the dropdown.
     if (desktopProfileLink) desktopProfileLink.classList.remove('hidden');
-    
-    // Mobile: Set auth button text to "Log Out" and show the mobile profile link.
     if (mobileAuthBtn) mobileAuthBtn.textContent = 'Log Out';
     if (mobileProfileLink) mobileProfileLink.classList.remove('hidden');
-
-    // Attach logout behavior for mobile auth button.
     if (mobileAuthBtn) {
       mobileAuthBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -312,7 +293,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/';
       });
     }
-    // Attach logout behavior for desktop dropdown's logout button.
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', (e) => {
@@ -323,7 +303,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   } else {
-    // Not logged in:
     if (desktopProfileLink) desktopProfileLink.classList.add('hidden');
     if (mobileAuthBtn) mobileAuthBtn.textContent = 'Login';
     if (mobileProfileLink) mobileProfileLink.classList.add('hidden');
