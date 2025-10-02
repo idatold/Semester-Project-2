@@ -1,57 +1,55 @@
-![Screenshot of Bidhive](image.png)
+# BidHive — Auction House
 
-# BidHive Auction House 🏆💰
+A simple overview of the use/purpose of the project.
 
+BidHive is a modern auction platform where users can browse listings, place bids, and manage their profiles. It focuses on clear UX, responsive layout, and straightforward interactions.
 
-
-## 📖 Table of Contents
-1. [Introduction](#introduction)
-2. [Features](#features)
-3. [Technologies Used](#technologies-used)
-4. [Getting Started](#getting-started)
-5. [Project Structure](#project-structure)
-6. [Future Improvements](#future-improvements)
-7. [Acknowledgements](#acknowledgements)
-
----
-
-## 👑 Introduction
-BidHive is an innovative online auction platform that connects buyers and sellers from around the world. Whether you're looking for rare collectibles or everyday items, BidHive offers a dynamic environment to bid, win, and manage auctions—all with a responsive, user-friendly design.
-
-Check out the live site here: [bidhive.example.com](https://bidhive-sv2.netlify.app/) 🌐
-
-## 🌟 Features
-- **Responsive Design:** Optimized for all device sizes.
-- **Auction Listings:** Browse, search, and filter auctions by category.
-- **User Authentication:** Secure registration and login with personalized content.
-- **Bidding System:** Place bids on active auctions with real‑time updates.
-- **Profile Management:** View your active listings, bids, and wins.
-- **Loading Spinner:** A fun animated bee spinner with a blur overlay appears during data fetching.
-
-## 🛠 Technologies Used
-- HTML & CSS for structure and styling.
-- JavaScript (ES Modules) for dynamic interactions.
-- Axios for API calls.
-- Vite as the development server and bundler.
-- Tailwind CSS for rapid UI development and responsiveness.
-
-## 🐝
-- The loadingspinner is borrowed from codepen! https://codepen.io/shoelaces/pen/MxWbjJ
-
-## Images 📷
-- All images are either AI generated or borrowed from Unsplash.
-
-## 🚀 Getting Started
-You can view the site by simply visiting the live version—no setup needed! Just explore and enjoy. 🌍
+![Screenshot of BidHive](image.png)
 
 
-## 🔮 Future Improvements
-- **Enhanced Interactivity:** Add more animations and interactive elements.
-- **Real-Time Updates:** Implement WebSockets for live bidding updates.
-- **Advanced Filtering:** Expand filtering and sorting options.
-- **Performance Optimization:** Improve load times and API efficiency.
+## Description
 
-## 💖 Acknowledgements
-Special thanks to the development community (my classmates especially) and all the open-source projects that made BidHive possible—shout out to Vite, Tailwind CSS, and Axios for providing fantastic tools for building modern web applications!
+BidHive is a web-based auction platform that integrates with the Noroff Auction API (v2). Authenticated users can create listings and place bids, while all visitors can browse and search auctions with sorting and filtering options.
+
+**Highlights:**
+- Browse, search, and filter auction listings
+- Place bids on active auctions (login required)
+- Create, update, and delete your own listings (login required)
+- Profile management (avatar, banner, bio, credits)
+- Responsive, accessible UI with clean, modular JS
 
 
+## Built With
+
+- HTML5
+- CSS3 + Tailwind CSS
+- JavaScript (ES Modules)
+- Vite
+- Axios
+- Noroff Auction API v2
+
+
+## Getting Started
+
+**Prerequisites:** Node.js 18+ and npm.
+
+**Install:**
+1. Clone: `git clone <your-repo-url>.git`
+2. `cd <your-project-folder>`
+3. Install deps: `npm install`
+4. Create a `.env` in the project root with: `VITE_API_KEY=your-noroff-api-key-here`
+
+**Run:**
+- Dev server: `npm run dev`
+- Build: `npm run build`
+- Preview: `npm run preview`
+
+
+
+
+
+## Contact
+
+- Portfolio old version : <(https://idatoldportfolio.netlify.app/)>
+- LinkedIn: <(https://www.linkedin.com/in/ida-charlotte-loriann-toldn%C3%A6s-920190117/)>
+- Email: <idatoldnaes@icloud.com>
