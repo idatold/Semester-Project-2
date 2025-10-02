@@ -16,7 +16,7 @@ export function setupProfileModals(username) {
     const bannerAlt = document.getElementById('bannerAlt').value;
     try {
       await updateBanner(username, bannerUrl, bannerAlt);
-      await updateProfile(username);  // Refresh UI after update
+      await updateProfile(username); // Refresh UI after update
       alert('Banner updated successfully!');
       bannerModal.classList.add('hidden');
     } catch (error) {
@@ -38,7 +38,7 @@ export function setupProfileModals(username) {
     const avatarAlt = document.getElementById('avatarAlt').value;
     try {
       await updateAvatar(username, avatarUrl, avatarAlt);
-      await updateProfile(username);  // Refresh UI after update
+      await updateProfile(username); // Refresh UI after update
       alert('Avatar updated successfully!');
       avatarModal.classList.add('hidden');
     } catch (error) {
@@ -59,7 +59,7 @@ export function setupProfileModals(username) {
     const bioText = document.getElementById('bioText').value;
     try {
       await updateBio(username, bioText);
-      await updateProfile(username);  // Refresh UI after update
+      await updateProfile(username); // Refresh UI after update
       alert('Bio updated successfully!');
       bioModal.classList.add('hidden');
     } catch (error) {

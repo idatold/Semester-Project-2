@@ -22,8 +22,6 @@ export function initProfileModal() {
     profileModal.setAttribute('aria-hidden', 'true');
   }
 
-  
-
   // Check if user is logged in by verifying the token in localStorage.
   if (localStorage.getItem('token')) {
     // Replace the button content with the profile SVG.
@@ -73,8 +71,7 @@ export function initProfileModal() {
       const password = document.getElementById('register-password').value;
 
       try {
-        const data = await registerUser(username, email, password);
-      
+        await registerUser(username, email, password); // removed unused 'data'
         alert('Registration successful! Please log in.');
         slider.style.transform = 'translateX(0%)';
       } catch (error) {
@@ -94,9 +91,7 @@ export function initProfileModal() {
 
       try {
         // handleLogin stores token and user info in localStorage.
-        await handleLogin({ email, password }, (user) => {
-   
-        });
+        await handleLogin({ email, password }, () => {});
         alert('Login successful!');
         window.location.href = '/profile/';
       } catch (error) {

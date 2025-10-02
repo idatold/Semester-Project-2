@@ -2,7 +2,14 @@
 import api from '../api/axios.mjs';
 
 /**
- * Create a new listing
+ * Create a new listing.
+ * @param {Object} params
+ * @param {string} params.title
+ * @param {string} [params.description]
+ * @param {string[]} [params.tags]
+ * @param {Array<{url:string, alt?:string}>} [params.media]
+ * @param {string} params.endsAt - ISO date string
+ * @returns {Promise<any>} Newly created listing
  */
 export async function createListing({ title, description, tags, media, endsAt }) {
   try {
@@ -12,7 +19,7 @@ export async function createListing({ title, description, tags, media, endsAt })
     if (media) body.media = media;
 
     const response = await api.post('/auction/listings', body);
-    return response.data.data; // newly created listing
+    return response.data.data;
   } catch (error) {
     console.error('Failed to create listing:', error);
     throw error;
@@ -20,7 +27,14 @@ export async function createListing({ title, description, tags, media, endsAt })
 }
 
 /**
- * Update a listing
+ * Update an existing listing.
+ * @param {string} id
+ * @param {Object} params
+ * @param {string} [params.title]
+ * @param {string} [params.description]
+ * @param {string[]} [params.tags]
+ * @param {Array<{url:string, alt?:string}>} [params.media]
+ * @returns {Promise<any>} Updated listing
  */
 export async function updateListing(id, { title, description, tags, media }) {
   try {
@@ -31,7 +45,7 @@ export async function updateListing(id, { title, description, tags, media }) {
     if (media) body.media = media;
 
     const response = await api.put(`/auction/listings/${id}`, body);
-    return response.data.data; // updated listing
+    return response.data.data;
   } catch (error) {
     console.error(`Failed to update listing ${id}:`, error);
     throw error;
@@ -39,38 +53,44 @@ export async function updateListing(id, { title, description, tags, media }) {
 }
 
 /**
- * Delete a listing
+ * Delete a listing.
+ * @param {string} id
+ * @returns {Promise<void>}
  */
 export async function deleteListing(id) {
   try {
-    // The API returns 204 No Content on success
     await api.delete(`/auction/listings/${id}`);
-    // Nothing to return
   } catch (error) {
     console.error(`Failed to delete listing ${id}:`, error);
     throw error;
   }
 }
 
-
-// In listings.mjs - update getAllListings to use _start
+/**
+ * Fetch a page of listings with seller & bid info.
+ * Uses Noroff params: _bids, _seller, sort/order, _start, _limit.
+ * @param {number} [page=1] - 1-based page number
+ * @param {number} [limit=40] - items per page
+ * @returns {Promise<{data:any[], meta:object}>} API payload with data[] and meta
+ */
 export async function getAllListings(page = 1, limit = 40) {
   const start = (page - 1) * limit;
   try {
-    const response = await api.get(
+    const { data } = await api.get(
       `/auction/listings?_bids=true&_seller=true&sort=created&order=desc&_start=${start}&_limit=${limit}`
     );
-    return response.data;
+    return data;
   } catch (error) {
     console.error('Failed to fetch auctions:', error);
-    return { data: [], meta: { isLastPage: true } }; // Return safe empty data
+    return { data: [], meta: { isLastPage: true } };
   }
 }
 
-
-
 /**
- * Get ONE listing by ID
+ * Get a single listing by ID.
+ * @param {string} id
+ * @param {{seller?: boolean, bids?: boolean}} [options]
+ * @returns {Promise<any>}
  */
 export async function getSingleListing(id, { seller, bids } = {}) {
   try {
@@ -78,10 +98,7 @@ export async function getSingleListing(id, { seller, bids } = {}) {
     const queryParams = [];
     if (seller) queryParams.push('_seller=true');
     if (bids) queryParams.push('_bids=true');
-
-    if (queryParams.length) {
-      endpoint += `?${queryParams.join('&')}`;
-    }
+    if (queryParams.length) endpoint += `?${queryParams.join('&')}`;
 
     const response = await api.get(endpoint);
     return response.data.data;
@@ -92,7 +109,10 @@ export async function getSingleListing(id, { seller, bids } = {}) {
 }
 
 /**
- * Place a bid on a listing
+ * Place a bid on a listing.
+ * @param {string} listingId
+ * @param {number} amount
+ * @returns {Promise<any>}
  */
 export async function bidOnListing(listingId, amount) {
   try {
@@ -103,4 +123,3 @@ export async function bidOnListing(listingId, amount) {
     throw error;
   }
 }
-

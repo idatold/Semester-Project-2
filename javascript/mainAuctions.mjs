@@ -155,72 +155,102 @@ export function renderListings(auctions, container = listingsContainer) {
     card.className =
       "bg-white shadow-md rounded-lg overflow-hidden flex flex-col w-full h-full hover:shadow-lg transition-shadow group";
 
-    // Media section: Remove the extra gray bg and use a custom border
-    const mediaUrl = media?.[0]?.url || "https://fakeimg.pl/600x400?text=??";
-    const mediaAlt = media?.[0]?.alt || title || "Auction image";
-    card.innerHTML = `
-      <div class="w-full h-48 flex items-center justify-center p-4  border-[#9B7E47] cursor-pointer">
-        <img src="${mediaUrl}" 
-             alt="${mediaAlt}" 
-             class="object-cover w-full h-full rounded-lg">
-      </div>
+// Media section: custom border + local JPG fallback
+const mediaUrl = media?.[0]?.url || '';
+const mediaAlt = media?.[0]?.alt || title || 'Auction image';
 
-      <div class="p-4 flex flex-col justify-between flex-grow">
-        <div class="cursor-pointer">
-          <h2 class="text-base font-bold mb-2 font-heading">
-            ${truncate(title || "Untitled Auction", 40)}
-          </h2>
+card.innerHTML = `
+  <div
+    class="listing-media w-full h-48 flex items-center justify-center p-4 border-[#9B7E47] cursor-pointer"
+    style="background-size:cover;background-position:center;background-repeat:no-repeat;"
+  >
+    <img
+      src="${mediaUrl}"
+      alt="${mediaAlt}"
+      class="auction-img object-cover w-full h-full rounded-lg"
+      loading="lazy" decoding="async"
+    >
+  </div>
 
-          <p class="text-gray-600 text-sm mb-2 line-clamp-3 font-beiruti">
-            ${truncate(description || "No description provided", 100)}
-          </p>
+  <div class="p-4 flex flex-col justify-between flex-grow">
+    <div class="cursor-pointer">
+      <h2 class="text-base font-bold mb-2 font-heading">
+        ${truncate(title || 'Untitled Auction', 40)}
+      </h2>
 
-          <div class="flex justify-between items-center text-sm font-beiruti mt-3">
-            <span class="font-semibold text-gray-700">
-              ${
-                typeof highestBid === "number"
-                  ? `Current bid: $${highestBid}`
-                  : highestBid
-              }
-            </span>
-            <span class="${
-              new Date(endsAt) < new Date() ? "text-red-600" : "text-blue-600"
-            } font-medium">
-              ${getTimeLeft(endsAt)}
-            </span>
-          </div>
-        </div>
+      <p class="text-gray-600 text-sm mb-2 line-clamp-3 font-beiruti">
+        ${truncate(description || 'No description provided', 100)}
+      </p>
 
-        <div class="mt-4 flex justify-between items-center">
-          <a href="/auctions/listing/index.html?id=${id}" 
-             class="view-btn text-white px-3 py-1.5 rounded transition text-sm bg-[#9B7E47] hover:bg-[#866C3C] font-beiruti">
-            View Listing
-          </a>
+      <div class="flex justify-between items-center text-sm font-beiruti mt-3">
+        <span class="font-semibold text-gray-700">
           ${
-            loggedInUsername && seller?.name === loggedInUsername
-              ? `
-            <div class="flex gap-2">
-              <button class="update-btn p-1 hover:bg-gray-100 rounded-full transition-colors z-10"
-                      data-id="${id}"
-                      aria-label="Edit listing">
-                <svg class="w-4 h-4 text-gray-600 hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                </svg>
-              </button>
-              <button class="delete-btn p-1 hover:bg-gray-100 rounded-full transition-colors z-10"
-                      data-id="${id}"
-                      aria-label="Delete listing">
-                <svg class="w-4 h-4 text-gray-600 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-              </button>
-            </div>
-          `
-              : ""
+            typeof highestBid === 'number'
+              ? `Current bid: $${highestBid}`
+              : highestBid
           }
-        </div>
+        </span>
+        <span class="${
+          new Date(endsAt) < new Date() ? 'text-red-600' : 'text-blue-600'
+        } font-medium">
+          ${getTimeLeft(endsAt)}
+        </span>
       </div>
-    `;
+    </div>
+
+    <div class="mt-4 flex justify-between items-center">
+      <a href="/auctions/listing/index.html?id=${id}" 
+         class="view-btn text-white px-3 py-1.5 rounded transition text-sm bg-[#9B7E47] hover:bg-[#866C3C] font-beiruti">
+        View Listing
+      </a>
+      ${
+        loggedInUsername && seller?.name === loggedInUsername
+          ? `
+        <div class="flex gap-2">
+          <button class="update-btn p-1 hover:bg-gray-100 rounded-full transition-colors z-10"
+                  data-id="${id}" aria-label="Edit listing">
+            <svg class="w-4 h-4 text-gray-600 hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+            </svg>
+          </button>
+          <button class="delete-btn p-1 hover:bg-gray-100 rounded-full transition-colors z-10"
+                  data-id="${id}" aria-label="Delete listing">
+            <svg class="w-4 h-4 text-gray-600 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      `
+          : ''
+      }
+    </div>
+  </div>
+`;
+
+// Local-background fallback if the image fails
+const mediaDiv = card.querySelector('.listing-media');
+const imgEl = card.querySelector('.auction-img');
+const fallbackBg = '/assets/bidhivenoimage.jpg'; // ← your JPG here
+
+if (imgEl) {
+  imgEl.addEventListener('error', () => {
+    if (imgEl.dataset.fallbackApplied) return;
+    imgEl.dataset.fallbackApplied = '1';
+    imgEl.style.display = 'none';
+    mediaDiv.style.backgroundImage = `url('${fallbackBg}')`;
+    mediaDiv.style.backgroundColor = '#ffffff';
+  });
+
+  // If there was no URL at all, trigger the background immediately
+  if (!mediaUrl) {
+    imgEl.style.display = 'none';
+    mediaDiv.style.backgroundImage = `url('${fallbackBg}')`;
+    mediaDiv.style.backgroundColor = '#ffffff';
+  }
+}
+
 
     const handleCardClick = (e) => {
       if (!e.target.closest("button") && !e.target.closest("a")) {
@@ -525,7 +555,7 @@ async function onCreateListingSubmit(event) {
       endsAt,
     });
 
-    let newListing = response;
+    const newListing = response;
 
     alert(`Listing created with ID: ${newListing.id}`);
 
