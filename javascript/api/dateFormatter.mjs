@@ -1,20 +1,43 @@
+// File: /javascript/api/dateFormatter.mjs
+
 /**
- * Formats a date like "YYYY-MM-DD<br>HH:mm".
- * Returns "Unknown" if the input is falsy or invalid.
+ * Format a date as "YYYY-MM-DD<br>HH:mm".
+ * Returns "Unknown" if input is falsy or invalid.
  * @param {string} dateString
  * @returns {string}
  */
 export function formatDateWithBreak(dateString) {
   if (!dateString) return 'Unknown';
 
-  const dateObj = new Date(dateString);
-  if (Number.isNaN(dateObj.getTime())) return 'Unknown';
+  const d = new Date(dateString);
+  if (Number.isNaN(d.getTime())) return 'Unknown';
 
-  const year = dateObj.getFullYear();
-  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const day = String(dateObj.getDate()).padStart(2, '0');
-  const hours = String(dateObj.getHours()).padStart(2, '0');
-  const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
 
-  return `${year}-${month}-${day}<br>${hours}:${minutes}`;
+  return `${y}-${m}-${day}<br>${hh}:${mm}`;
+}
+
+/**
+ * Format a date as "YYYY-MM-DD HH:mm" (no <br>).
+ * Returns "Unknown" if input is falsy or invalid.
+ * @param {string} dateString
+ * @returns {string}
+ */
+export function formatDateNoBreak(dateString) {
+  if (!dateString) return 'Unknown';
+
+  const d = new Date(dateString);
+  if (Number.isNaN(d.getTime())) return 'Unknown';
+
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+
+  return `${y}-${m}-${day} ${hh}:${mm}`;
 }
