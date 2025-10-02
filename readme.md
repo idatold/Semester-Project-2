@@ -50,6 +50,6 @@ BidHive is a web-based auction platform that integrates with the Noroff Auction 
 
 ## Contact
 
-- Portfolio old version : <(https://idatoldportfolio.netlify.app/)>
-- LinkedIn: <(https://www.linkedin.com/in/ida-charlotte-loriann-toldn%C3%A6s-920190117/)>
+- Portfolio old version : <https://idatoldportfolio.netlify.app/>
+- LinkedIn: <https://www.linkedin.com/in/ida-charlotte-loriann-toldn%C3%A6s-920190117/>
 - Email: <idatoldnaes@icloud.com>
