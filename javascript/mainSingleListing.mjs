@@ -90,7 +90,7 @@ function createSingleListingDOM(listing) {
   const imgEl = document.createElement('img');
   const mediaUrl = media?.[0]?.url || '';
   const mediaAlt = media?.[0]?.alt || title || 'Auction image';
-  const fallbackBg = '/assets/bidhivenoimage.jpg'; // SAME path as in mainAuctions (works locally)
+  const fallbackBg = '/bidhivenoimage.jpg'; // SAME path as in mainAuctions (works locally)
 
   // keep track of what to open in modal
   let currentImageForModal = mediaUrl || fallbackBg;
