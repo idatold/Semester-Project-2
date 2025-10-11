@@ -232,7 +232,7 @@ card.innerHTML = `
 // Local-background fallback if the image fails
 const mediaDiv = card.querySelector('.listing-media');
 const imgEl = card.querySelector('.auction-img');
-const fallbackBg = '/assets/bidhivenoimage.jpg'; // ← your JPG here
+const fallbackBg = '/assets/bidhivenoimage.jpg'; 
 
 if (imgEl) {
   imgEl.addEventListener('error', () => {

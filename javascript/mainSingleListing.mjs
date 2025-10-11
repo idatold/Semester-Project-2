@@ -73,17 +73,61 @@ function createSingleListingDOM(listing) {
   const card = document.createElement('div');
   card.className = 'bg-white shadow-md rounded p-6 flex flex-col items-center w-full max-w-[540px] mx-auto font-[Beiruti]';
   
-  // 1) Image container (responsive)
+  // 1) Image container (matches mainAuctions fallback pattern)
   const imageContainer = document.createElement('div');
   imageContainer.className = 'mb-4 w-full max-w-[500px] flex items-center justify-center';
   imageContainer.style.aspectRatio = '500 / 333';
-  const imageUrl = media?.[0]?.url || 'https://via.placeholder.com/500x333';
-  const imageEl = document.createElement('img');
-  imageEl.src = imageUrl;
-  imageEl.alt = title || 'Untitled';
-  imageEl.className = 'w-full h-full object-cover rounded cursor-pointer';
-  imageEl.addEventListener('click', () => openImageModal(imageUrl));
-  imageContainer.appendChild(imageEl);
+
+  // Build like in mainAuctions: <div style bg> + <img> with error->background swap
+  const mediaDiv = document.createElement('div');
+  mediaDiv.className = 'listing-media w-full h-full flex items-center justify-center p-0';
+  mediaDiv.style.width = '100%';
+  mediaDiv.style.height = '100%';
+  mediaDiv.style.backgroundSize = 'cover';
+  mediaDiv.style.backgroundPosition = 'center';
+  mediaDiv.style.backgroundRepeat = 'no-repeat';
+
+  const imgEl = document.createElement('img');
+  const mediaUrl = media?.[0]?.url || '';
+  const mediaAlt = media?.[0]?.alt || title || 'Auction image';
+  const fallbackBg = '/assets/bidhivenoimage.jpg'; // SAME path as in mainAuctions (works locally)
+
+  // keep track of what to open in modal
+  let currentImageForModal = mediaUrl || fallbackBg;
+
+  imgEl.src = mediaUrl || ''; // if empty, we'll hide and set bg below
+  imgEl.alt = mediaAlt;
+  imgEl.className = 'auction-img object-cover w-full h-full rounded cursor-pointer';
+  imgEl.loading = 'lazy';
+  imgEl.decoding = 'async';
+
+  // ERROR → hide <img>, set background to fallback (no loop), update modal src
+  imgEl.addEventListener('error', () => {
+    if (imgEl.dataset.fallbackApplied) return;
+    imgEl.dataset.fallbackApplied = '1';
+    imgEl.style.display = 'none';
+    mediaDiv.style.backgroundImage = `url('${fallbackBg}')`;
+    mediaDiv.style.backgroundColor = '#ffffff';
+    currentImageForModal = fallbackBg;
+  });
+
+  // If there was no URL at all, immediately use fallback background
+  if (!mediaUrl) {
+    imgEl.style.display = 'none';
+    mediaDiv.style.backgroundImage = `url('${fallbackBg}')`;
+    mediaDiv.style.backgroundColor = '#ffffff';
+    currentImageForModal = fallbackBg;
+  }
+
+  // Click to open the image (original or fallback) in modal
+  mediaDiv.addEventListener('click', () => openImageModal(currentImageForModal));
+  imgEl.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openImageModal(currentImageForModal);
+  });
+
+  mediaDiv.appendChild(imgEl);
+  imageContainer.appendChild(mediaDiv);
   card.appendChild(imageContainer);
   
   // 2) Title
